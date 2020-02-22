@@ -6,11 +6,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class UserDao {
+public class UserDao {
 	
+	
+	private  SimpleConnectionMaker simpleConnectionMaker;
+	
+	public UserDao() {
+		this.simpleConnectionMaker = new SimpleConnectionMaker();
+	}
+
 	public void add(User user) throws ClassNotFoundException, SQLException {
 	
-		Connection c = connection();
+		Connection c = simpleConnectionMaker.getConnection();
 		
 		PreparedStatement ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
 		ps.setString(1, user.getId());
@@ -25,7 +32,7 @@ public abstract class UserDao {
 	}
 	public User get(String id) throws SQLException, ClassNotFoundException {
 		
-		Connection c = connection();
+		Connection c = simpleConnectionMaker.getConnection();
 		
 		PreparedStatement ps = c.prepareStatement("SELECT * FROM USERTB WHERE ID = ?");
 		
@@ -47,28 +54,28 @@ public abstract class UserDao {
 		return user;
 	}
 	
-	public abstract Connection connection() throws ClassNotFoundException, SQLException ;
-	
-	
-	public class NUserDao extends UserDao{
-
-		@Override
-		public Connection connection() throws ClassNotFoundException, SQLException {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection c = DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe","hr","hr");
-			return c;
-		}
-		
-	}
-	
-	public class DUserDao extends UserDao{
-
-		@Override
-		public Connection connection() throws ClassNotFoundException, SQLException {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection c = DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe","hr","hr");
-			return c;
-		}
-	}
+	/*
+	 * public abstract Connection connection() throws ClassNotFoundException,
+	 * SQLException ;
+	 * 
+	 * 
+	 * public class NUserDao extends UserDao{
+	 * 
+	 * @Override public Connection connection() throws ClassNotFoundException,
+	 * SQLException { Class.forName("oracle.jdbc.driver.OracleDriver"); Connection c
+	 * =
+	 * DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe",
+	 * "hr","hr"); return c; }
+	 * 
+	 * }
+	 * 
+	 * public class DUserDao extends UserDao{
+	 * 
+	 * @Override public Connection connection() throws ClassNotFoundException,
+	 * SQLException { Class.forName("oracle.jdbc.driver.OracleDriver"); Connection c
+	 * =
+	 * DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe",
+	 * "hr","hr"); return c; } }
+	 */
 	
 }

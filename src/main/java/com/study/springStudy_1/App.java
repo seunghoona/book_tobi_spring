@@ -13,10 +13,10 @@ public class App
 		
 		//UserDAO는 추상클래스이므로 객체를 직접 생성할 수 없다 
 		//그러므로 상속한 클래스를 주입 해주어야한다.
-	  UserDao dao = new UserDao.DUserDao();
+	  UserDao dao = new UserDao();
 	  
 	  User user = new User();
-	  user.setId("xlzcvkj");
+	  user.setId("dodoui");
 	  user.setName("나승후");
 	  user.setPassword("1");
 	  
