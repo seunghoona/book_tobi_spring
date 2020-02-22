@@ -11,10 +11,10 @@ public class App
 	public static void main( String[] args ) throws ClassNotFoundException, SQLException
 	{
 		
-	  UserDao dao = new UserDao(new DConnectionMaker());
+	  UserDao dao = new DaoFactory().userDao();
 	  
 	  User user = new User();
-	  user.setId("999");
+	  user.setId("10101010");
 	  user.setName("나승후");
 	  user.setPassword("1");
 	  
