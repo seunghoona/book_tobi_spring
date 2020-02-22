@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDao {
+public abstract class UserDao {
 	
 	public void add(User user) throws ClassNotFoundException, SQLException {
 	
@@ -47,10 +47,28 @@ public class UserDao {
 		return user;
 	}
 	
-	private Connection connection() throws ClassNotFoundException, SQLException {
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		Connection c = DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe","hr","hr");
-		return c;
+	public abstract Connection connection() throws ClassNotFoundException, SQLException ;
+	
+	
+	public class NUserDao extends UserDao{
+
+		@Override
+		public Connection connection() throws ClassNotFoundException, SQLException {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection c = DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe","hr","hr");
+			return c;
+		}
+		
+	}
+	
+	public class DUserDao extends UserDao{
+
+		@Override
+		public Connection connection() throws ClassNotFoundException, SQLException {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection c = DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe","hr","hr");
+			return c;
+		}
 	}
 	
 }
