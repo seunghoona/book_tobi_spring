@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+	
+	<beans>
+		<!--접속정보를 가진 클래스 빈 설정 -->
+		<bean id="connectionMaker" class="com.study.springStudy_1.DConnectionMaker"/>
+		
+		
+		
+		
+		
+		<!--쿼리를 실행하는 클래스 -->
+		<bean id="userDao" class="com.study.springStudy_1.UserDao">
+			<!-- 책에서는 setter형식의 주입을 사용하기 때문에 property를 사용하여 주입하였다 
+				그러나 우리는 생성자 형식으로 주입받기에 Constructor방식의 주입을 사용한다.
+			-->
+			<constructor-arg name="connectionMaker" ref="connectionMaker"/>
+		</bean>
+	</beans>
+
+</beans>
