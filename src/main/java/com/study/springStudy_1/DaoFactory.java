@@ -19,7 +19,7 @@ public class DaoFactory {
 		dataSource.setPassword("hr");
 		return dataSource;
 	}
-	
+	  
 	
 	@Bean
 	public UserDao userDao() {

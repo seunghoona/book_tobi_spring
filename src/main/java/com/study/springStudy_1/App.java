@@ -47,10 +47,10 @@ public class App
 		 */	
 		
 		
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
 		UserDao dao = context.getBean("userDao",UserDao.class);
 		User user = new User();
-		user.setId("test3");
+		user.setId("test4");
 		user.setName("나승후");
 		user.setPassword("1");
 		
