@@ -1,7 +1,6 @@
 package com.study.springStudy_1;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,28 +55,64 @@ public class UserDao {
 		return user;
 	}
 	
-	/*
-	 * public abstract Connection connection() throws ClassNotFoundException,
-	 * SQLException ;
-	 * 
-	 * 
-	 * public class NUserDao extends UserDao{
-	 * 
-	 * @Override public Connection connection() throws ClassNotFoundException,
-	 * SQLException { Class.forName("oracle.jdbc.driver.OracleDriver"); Connection c
-	 * =
-	 * DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe",
-	 * "hr","hr"); return c; }
-	 * 
-	 * }
-	 * 
-	 * public class DUserDao extends UserDao{
-	 * 
-	 * @Override public Connection connection() throws ClassNotFoundException,
-	 * SQLException { Class.forName("oracle.jdbc.driver.OracleDriver"); Connection c
-	 * =
-	 * DriverManager.getConnection("Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe",
-	 * "hr","hr"); return c; } }
+	/**
+	 * <pre>
+	 * 1. 개요 	: 삭제 
+	 * 2. 처리내용 : 
+	 * </pre>
+	 * @Method	:deleteAll
+	 * @date	: 2020. 3. 8.
+	 * @author	: naseu
+	 * @history	:
+	 * ---------------- --------------- -------------------------------------------------
+	 * 변경일				작성자			변경내역
+	 * ---------------- --------------- -------------------------------------------------
+	 * 2020. 3. 8.		naseu			최초작성
+	 * ----------------------------------------------------------------------------------
 	 */
+	public void deleteAll() throws SQLException, ClassNotFoundException {
+		
+		Connection c = dataSource.getConnection();
+		
+		PreparedStatement ps = c.prepareStatement("DELETE FROM USERTB ");
+		
+		ps.executeUpdate();
+		
+		ps.close();
+		c.close();
+		
+	}
+	
+	/**
+	 * <pre>
+	 * 1. 개요 	: 
+	 * 2. 처리내용 : 
+	 * </pre>
+	 * @Method	:getCount
+	 * @date	: 2020. 3. 8.
+	 * @author	: naseu
+	 * @history	:
+	 * ---------------- --------------- -------------------------------------------------
+	 * 변경일				작성자			변경내역
+	 * ---------------- --------------- -------------------------------------------------
+	 * 2020. 3. 8.		naseu			최초작성
+	 * ----------------------------------------------------------------------------------
+	 */
+	public int getCount() throws SQLException, ClassNotFoundException {
+		
+		Connection c = dataSource.getConnection();
+		int count =0;
+		PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM USERTB");
+		
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		ps.close();
+		c.close();
+		return count;
+	}
 	
 }
