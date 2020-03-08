@@ -16,7 +16,7 @@
 			<!-- 책에서는 setter형식의 주입을 사용하기 때문에 property를 사용하여 주입하였다 
 				그러나 우리는 생성자 형식으로 주입받기에 Constructor방식의 주입을 사용한다.
 			-->
-			<constructor-arg name="connectionMaker" ref="connectionMaker"/>
+		<!-- 	<constructor-arg name="connectionMaker" ref="connectionMaker"/> -->
 		</bean>
 	</beans>
 

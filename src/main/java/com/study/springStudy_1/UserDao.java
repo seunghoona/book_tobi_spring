@@ -6,18 +6,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 public class UserDao {
 	
 	
-	private  ConnectionMaker connectionMaker;
-	
-	public UserDao(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
-	}
+	private DataSource dataSource;
 
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
 	public void add(User user) throws ClassNotFoundException, SQLException {
 	
-		Connection c = connectionMaker.makeConnction();
+		Connection c = dataSource.getConnection();
 		
 		PreparedStatement ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
 		ps.setString(1, user.getId());
@@ -32,7 +34,7 @@ public class UserDao {
 	}
 	public User get(String id) throws SQLException, ClassNotFoundException {
 		
-		Connection c = connectionMaker.makeConnction();
+		Connection c = dataSource.getConnection();
 		
 		PreparedStatement ps = c.prepareStatement("SELECT * FROM USERTB WHERE ID = ?");
 		
