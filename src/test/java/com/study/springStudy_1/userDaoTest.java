@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,19 +20,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = DaoFactory.class)
 public class userDaoTest {
 	
+	@Autowired
+	private ApplicationContext applicationContext;
+	@Autowired
 	private UserDao dao;
+	
 	private User user1;
 	private User user2;
 	private User user3;
 	
 	@Before
 	public void setUp() {
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-		dao = applicationContext.getBean("userDao",UserDao.class);
 		 user1 = new User("test1","김승후","1");
 		 user2 = new User("test2","이승후","2");
 		 user3 = new User("test3","박승후","3");
-
 	}
 	
 	
@@ -59,7 +61,7 @@ public class userDaoTest {
 
 		
 		//예외처리
-		dao.get("unknow id");
+		dao.get(user1.getId());
 		
 		// get 메소드 테스트 
 		// 예외조건에 대한 테스트 
