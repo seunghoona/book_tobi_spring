@@ -5,23 +5,24 @@ import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactory.class)
+//테스트 메소드에서 애플리케이션 컨텍스트 구성이나 상태를 변경한다는 것을 알려줌
+@DirtiesContext
 public class userDaoTest {
 	
-	@Autowired
-	private ApplicationContext applicationContext;
 	@Autowired
 	private UserDao dao;
 	
@@ -31,6 +32,14 @@ public class userDaoTest {
 	
 	@Before
 	public void setUp() {
+		//테스트할 DB정보 
+		DataSource dataSource = new SingleConnectionDataSource( 
+		"Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe"
+		,"hr"
+		,"hr"
+		,true
+		);
+		dao.setDataSource(dataSource);
 		 user1 = new User("test1","김승후","1");
 		 user2 = new User("test2","이승후","2");
 		 user3 = new User("test3","박승후","3");
@@ -38,7 +47,7 @@ public class userDaoTest {
 	
 	
 	
-	@Test(expected =EmptyResultDataAccessException.class)
+	@Test
 	public void delAllAndAddCount() throws SQLException, ClassNotFoundException {
 		
 
@@ -57,11 +66,10 @@ public class userDaoTest {
 		assertThat(dao.getCount(), is(3));
 		
 		User userget1 = dao.get(user1.getId());
-		User userget2 = dao.get(user1.getId());
-
+		User userget2 = dao.get(user2.getId());
 		
-		//예외처리
-		dao.get(user1.getId());
+		System.out.println(userget1.getName());
+		System.out.println(userget2.getName());
 		
 		// get 메소드 테스트 
 		// 예외조건에 대한 테스트 
