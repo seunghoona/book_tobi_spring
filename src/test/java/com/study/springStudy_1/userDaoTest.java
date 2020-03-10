@@ -18,9 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DaoFactory.class)
+@ContextConfiguration(locations = "/applicationContext-prd.xml")
 //테스트 메소드에서 애플리케이션 컨텍스트 구성이나 상태를 변경한다는 것을 알려줌
-@DirtiesContext
 public class userDaoTest {
 	
 	@Autowired
@@ -32,14 +31,6 @@ public class userDaoTest {
 	
 	@Before
 	public void setUp() {
-		//테스트할 DB정보 
-		DataSource dataSource = new SingleConnectionDataSource( 
-		"Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe"
-		,"hr"
-		,"hr"
-		,true
-		);
-		dao.setDataSource(dataSource);
 		 user1 = new User("test1","김승후","1");
 		 user2 = new User("test2","이승후","2");
 		 user3 = new User("test3","박승후","3");
