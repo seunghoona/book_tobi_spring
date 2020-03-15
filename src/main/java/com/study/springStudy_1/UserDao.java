@@ -7,6 +7,8 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+
 public class UserDao {
 	
 	
@@ -16,19 +18,28 @@ public class UserDao {
 		this.dataSource = dataSource;
 	}
 	
-	public void add(User user) throws ClassNotFoundException, SQLException {
+	public void add(User user) throws  SQLException {
+		Connection c = null;
+		PreparedStatement ps =null; 
 	
-		Connection c = dataSource.getConnection();
+	try {
 		
-		PreparedStatement ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
+		
+		c = dataSource.getConnection();
+		ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
+
 		ps.setString(1, user.getId());
 		ps.setString(2, user.getName());
 		ps.setString(3, user.getPassword());
 		
 		ps.executeUpdate();
 		
-		ps.close();
-		c.close();
+	}catch (SQLException e) {
+			throw e ;
+		}finally {
+			if(ps == null) { ps.close(); }
+			if(c == null) { c.close(); }
+		}
 		
 	}
 	public User get(String id) throws SQLException, ClassNotFoundException {
@@ -66,6 +77,7 @@ public class UserDao {
 	 * @Method	:deleteAll
 	 * @date	: 2020. 3. 8.
 	 * @author	: naseu
+	 * @throws SQLException 
 	 * @history	:
 	 * ---------------- --------------- -------------------------------------------------
 	 * 변경일				작성자			변경내역
@@ -73,19 +85,25 @@ public class UserDao {
 	 * 2020. 3. 8.		naseu			최초작성
 	 * ----------------------------------------------------------------------------------
 	 */
-	public void deleteAll() throws SQLException, ClassNotFoundException {
-		
-		Connection c = dataSource.getConnection();
-		
-		PreparedStatement ps = c.prepareStatement("DELETE FROM USERTB ");
-		
-		ps.executeUpdate();
-		
-		ps.close();
+	public void deleteAll() throws SQLException {
+
+		Connection c = null;
+		PreparedStatement ps = null;
+		try {
+			c  = dataSource.getConnection();
+			ps = c.prepareStatement("DELETE FROM USERTB ");
+			ps.executeUpdate();
+		}catch (SQLException e) {
+			throw e ;
+		}finally {
+			if(ps == null) { ps.close(); }
+			if(c == null) { c.close(); }
+		}
+
 		c.close();
-		
+
 	}
-	
+
 	/**
 	 * <pre>
 	 * 1. 개요 	: 
