@@ -26,7 +26,8 @@ public class UserDao {
 		
 		
 		c = dataSource.getConnection();
-		ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
+		
+		ps = makeStatement(c);
 
 		ps.setString(1, user.getId());
 		ps.setString(2, user.getName());
@@ -42,6 +43,7 @@ public class UserDao {
 		}
 		
 	}
+
 	public User get(String id) throws SQLException, ClassNotFoundException {
 		
 		Connection c = dataSource.getConnection();
@@ -136,4 +138,10 @@ public class UserDao {
 		return count;
 	}
 	
+	
+	private PreparedStatement makeStatement(Connection c) throws SQLException {
+		PreparedStatement ps;
+		ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
+		return ps;
+	}
 }
