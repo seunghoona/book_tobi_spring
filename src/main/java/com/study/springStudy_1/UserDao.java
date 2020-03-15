@@ -85,23 +85,10 @@ public class UserDao {
 	 * ----------------------------------------------------------------------------------
 	 */
 	public void deleteAll() throws SQLException {
-
-		Connection c = null;
-		PreparedStatement ps = null;
-		try {
-			c  = dataSource.getConnection();
-			
-			//전략적 패턴 
-			StatementStrategy strategy = new DeleteAllStatement();
-			strategy.makePreparedStatement(c);
-			
-			ps.executeUpdate();
-		}catch (SQLException e) {
-			throw e ;
-		}finally {
-			if(ps == null) { ps.close(); }
-			if(c == null) { c.close(); }
-		}
+		//선정한 전략 클래스의 오브젝트 생성
+		StatementStrategy st = new DeleteAllStatement();
+		//컨텍스트 호출 전략 오브젝트 전달
+		jdbcContextWithStatementStrategy(st);
 	}
 
 	/**
@@ -134,6 +121,39 @@ public class UserDao {
 		ps.close();
 		c.close();
 		return count;
+	}
+	
+	/**
+	 * <pre>
+	 * 1. 개요 	:전략패턴
+	 * 2. 처리내용 : 클라이언트에 들어갈 내용을 분리 시키기 
+	 * </pre>
+	 * @Method	:jdbcContextWithStatementStrategy
+	 * @date	: 2020. 3. 15.
+	 * @author	: naseu
+	 * @history	:
+	 * ---------------- --------------- -------------------------------------------------
+	 * 변경일				작성자			변경내역
+	 * ---------------- --------------- -------------------------------------------------
+	 * 2020. 3. 15.		naseu			최초작성
+	 * ----------------------------------------------------------------------------------
+	 */
+	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
+		Connection c = null;
+		PreparedStatement ps = null;
+		try {
+			c  = dataSource.getConnection();
+			
+			//전략적 패턴 
+			ps = stmt.makePreparedStatement(c);
+			
+			ps.executeUpdate();
+		}catch (SQLException e) {
+			throw e ;
+		}finally {
+			if(ps == null) { ps.close(); }
+			if(c == null) { c.close(); }
+		}
 	}
 
 }
