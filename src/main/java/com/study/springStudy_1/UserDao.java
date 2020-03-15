@@ -14,7 +14,7 @@ public class UserDao {
 	public UserDao(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-
+ 
 	public void add(User user) throws  SQLException {
 		//선정한 전략 클래스의 오브젝트 생성
 		StatementStrategy st = new AddStatement(user);
