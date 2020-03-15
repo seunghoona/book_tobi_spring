@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-public abstract class UserDao {
+public class UserDao {
 
 
 	private DataSource dataSource;
@@ -90,7 +90,11 @@ public abstract class UserDao {
 		PreparedStatement ps = null;
 		try {
 			c  = dataSource.getConnection();
-			ps = makeStatement(c);
+			
+			//전략적 패턴 
+			StatementStrategy strategy = new DeleteAllStatement();
+			strategy.makePreparedStatement(c);
+			
 			ps.executeUpdate();
 		}catch (SQLException e) {
 			throw e ;
@@ -131,9 +135,5 @@ public abstract class UserDao {
 		c.close();
 		return count;
 	}
-
-
-	abstract protected PreparedStatement makeStatement(Connection c) throws SQLException ;
-
 
 }
