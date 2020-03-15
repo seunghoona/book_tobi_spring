@@ -9,35 +9,17 @@ import javax.sql.DataSource;
 
 public class UserDao {
 
-
 	private DataSource dataSource;
 
 	public UserDao(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
-
 	public void add(User user) throws  SQLException {
-		Connection c = null;
-		PreparedStatement ps =null; 
-
-		try {
-			c = dataSource.getConnection();
-
-			ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
-
-			ps.setString(1, user.getId());
-			ps.setString(2, user.getName());
-			ps.setString(3, user.getPassword());
-
-			ps.executeUpdate();
-
-		}catch (SQLException e) {
-			throw e ;
-		}finally {
-			if(ps == null) { ps.close(); }
-			if(c == null) { c.close(); }
-		}
+		//선정한 전략 클래스의 오브젝트 생성
+		StatementStrategy st = new AddStatement(user);
+		//컨텍스트 호출 전략 오브젝트 전달
+		jdbcContextWithStatementStrategy(st);
 
 	}
 

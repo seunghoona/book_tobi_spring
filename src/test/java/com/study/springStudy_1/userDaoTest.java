@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "/applicationContext-prd.xml")
+@ContextConfiguration(classes = DaoFactory.class)
 //테스트 메소드에서 애플리케이션 컨텍스트 구성이나 상태를 변경한다는 것을 알려줌
 public class userDaoTest {
 	
@@ -35,8 +35,6 @@ public class userDaoTest {
 		 user2 = new User("test2","이승후","2");
 		 user3 = new User("test3","박승후","3");
 	}
-	
-	
 	
 	@Test
 	public void delAllAndAddCount() throws SQLException, ClassNotFoundException {
