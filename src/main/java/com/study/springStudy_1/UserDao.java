@@ -16,19 +16,27 @@ public class UserDao {
 	}
 
 	public void add(User user) throws  SQLException {
-		//내부 클래스로전환
-		StatementStrategy st = new StatementStrategy() {
+		class AddStatement implements StatementStrategy{
 			
+			User user;
+
+			public AddStatement(User user) {
+				super();
+				this.user = user;
+			}
+
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+
 				PreparedStatement ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
 				ps.setString(1, user.getId());
 				ps.setString(2, user.getName());
 				ps.setString(3, user.getPassword());
 				return ps;
 			}
-		};
-
+		}
+		//선정한 전략 클래스의 오브젝트 생성
+		StatementStrategy st = new AddStatement(user);
 		//컨텍스트 호출 전략 오브젝트 전달
 		jdbcContextWithStatementStrategy(st);
 
