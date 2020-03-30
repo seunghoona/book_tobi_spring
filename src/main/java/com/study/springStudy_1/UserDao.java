@@ -84,7 +84,7 @@ public class UserDao {
 	 * ----------------------------------------------------------------------------------
 	 */
 	public void deleteAll() throws SQLException {
-		executeSql("DELETE FROM USERTB");
+		this.jdbcContext.executeSql("DELETE FROM USERTB");
 	}
 
 	/**
@@ -119,30 +119,6 @@ public class UserDao {
 		return count;
 	}
 
-	/**
-	 * <pre>
-	 * 1. 개요 	: 변하지 않는 부분을 분리시키기  
-	 * 2. 처리내용 : 
-	 * </pre>
-	 * @Method	:executeSql
-	 * @date	: 2020. 3. 8.
-	 * @author	: naseu
-	 * @history	:
-	 * ---------------- --------------- -------------------------------------------------
-	 * 변경일				작성자			변경내역
-	 * ---------------- --------------- -------------------------------------------------
-	 * 2020. 3. 8.		naseu			최초작성
-	 * ----------------------------------------------------------------------------------
-	 */
-	private void executeSql(final String query) throws SQLException{
-		this.jdbcContext.workWithStatementStrategy(
-			new StatementStrategy() {
-				@Override
-				public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-					return c.prepareStatement(query);
-				}
-			});
-	}
 
 
 }

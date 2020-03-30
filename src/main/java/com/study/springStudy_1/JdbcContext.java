@@ -30,7 +30,32 @@ public class JdbcContext {
 			if(c != null)  { try {  } catch (Exception e) {} }
 		}
 	}
-
+	
+	/**
+	 * <pre>
+	 * 1. 개요 	: 변하지 않는 부분을 분리시키기  
+	 * 2. 처리내용 : 
+	 * </pre>
+	 * @Method	:executeSql
+	 * @date	: 2020. 3. 8.
+	 * @author	: naseu
+	 * @history	:
+	 * ---------------- --------------- -------------------------------------------------
+	 * 변경일				작성자			변경내역
+	 * ---------------- --------------- -------------------------------------------------
+	 * 2020. 3. 8.		naseu			최초작성
+	 * ----------------------------------------------------------------------------------
+	 */
+	public void executeSql(final String query) throws SQLException{
+		/*this.jdbcContext.workWithStatementStrategy(*/
+		workWithStatementStrategy(
+			new StatementStrategy() {
+				@Override
+				public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+					return c.prepareStatement(query);
+				}
+			});
+	}
 /*	
 	public <T> Class<T> workWithStatementStrategyRead(StatementStrategy stmt, Class<T> className) throws SQLException, InstantiationException, IllegalAccessException{
 		Connection c = null;
