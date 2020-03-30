@@ -15,5 +15,12 @@ public class App
 	public static void main( String[] args ) throws ClassNotFoundException, SQLException
 	{
 		
+	/*	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		
+		UserDao dao = context.getBean("userDao",UserDao.class);
+		
+		dao.get("1");
+		*/
+		
 	}
 }

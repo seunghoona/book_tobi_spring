@@ -22,10 +22,20 @@ public class DaoFactory {
 	  
 	
 	@Bean
-	public UserDao userDao() {
-		return new UserDao (dataSource());
+	public JdbcContext jdbcContext() {
+		JdbcContext jdbcContext = new JdbcContext();
+		jdbcContext.setDataSouce(dataSource());
+		return jdbcContext;
 	}
-
+	
+	@Bean
+	public UserDao userDao() {
+		UserDao userDao = new UserDao();
+		userDao.setDataSource(dataSource());
+		userDao.setJdbcContext(jdbcContext());
+		return userDao;
+	}
+	
 	/*
 	 * @Bean public ConnectionMaker connectionMaker() { //DI 주입 //운영 개발 로컬 접속정보를 쉽게
 	 * 주입하여 변경할 수 있다. return new LocalDBConnectionMaker(); return new

@@ -9,21 +9,20 @@ import javax.sql.DataSource;
 
 public class UserDao {
 
+	private JdbcContext jdbcContext;
+	
 	private DataSource dataSource;
 
-	public UserDao(DataSource dataSource) {
+	public void setJdbcContext(JdbcContext jdbcContext) {
+		this.jdbcContext = jdbcContext;
+	}
+	
+	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	public void add(User user) throws  SQLException {
-		class AddStatement implements StatementStrategy{
-			
-			User user;
-
-			public AddStatement(User user) {
-				super();
-				this.user = user;
-			}
+		this.jdbcContext.workWithStatementStrategy(new StatementStrategy (){
 
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
@@ -34,12 +33,7 @@ public class UserDao {
 				ps.setString(3, user.getPassword());
 				return ps;
 			}
-		}
-		//선정한 전략 클래스의 오브젝트 생성
-		StatementStrategy st = new AddStatement(user);
-		//컨텍스트 호출 전략 오브젝트 전달
-		jdbcContextWithStatementStrategy(st);
-
+		});
 	}
 
 	public User get(String id) throws SQLException, ClassNotFoundException {
@@ -86,10 +80,14 @@ public class UserDao {
 	 * ----------------------------------------------------------------------------------
 	 */
 	public void deleteAll() throws SQLException {
-		//선정한 전략 클래스의 오브젝트 생성
-		StatementStrategy st = new DeleteAllStatement();
-		//컨텍스트 호출 전략 오브젝트 전달
-		jdbcContextWithStatementStrategy(st);
+		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
+			
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				PreparedStatement ps = c.prepareStatement("DELETE FROM USERTB");
+				return ps;
+			}
+		});
 	}
 
 	/**
@@ -123,38 +121,7 @@ public class UserDao {
 		c.close();
 		return count;
 	}
-	
-	/**
-	 * <pre>
-	 * 1. 개요 	:전략패턴
-	 * 2. 처리내용 : 클라이언트에 들어갈 내용을 분리 시키기 
-	 * </pre>
-	 * @Method	:jdbcContextWithStatementStrategy
-	 * @date	: 2020. 3. 15.
-	 * @author	: naseu
-	 * @history	:
-	 * ---------------- --------------- -------------------------------------------------
-	 * 변경일				작성자			변경내역
-	 * ---------------- --------------- -------------------------------------------------
-	 * 2020. 3. 15.		naseu			최초작성
-	 * ----------------------------------------------------------------------------------
-	 */
-	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-		Connection c = null;
-		PreparedStatement ps = null;
-		try {
-			c  = dataSource.getConnection();
-			
-			//전략적 패턴 
-			ps = stmt.makePreparedStatement(c);
-			
-			ps.executeUpdate();
-		}catch (SQLException e) {
-			throw e ;
-		}finally {
-			if(ps == null) { ps.close(); }
-			if(c == null) { c.close(); }
-		}
-	}
+
+
 
 }
