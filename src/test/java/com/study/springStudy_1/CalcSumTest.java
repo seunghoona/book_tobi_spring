@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 
 import org.hamcrest.core.Is;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,12 +18,25 @@ import com.study.calculator.Calculator;
 @ContextConfiguration(classes = DaoFactory.class)
 public class CalcSumTest {
 
+	Calculator calculator;
+	String numFilepath;
+	
+	
+	@Before
+	public void setUp() {
+		this.calculator = new Calculator();
+		this.numFilepath = getClass().getResource("number.txt").getPath();
+	}
+	
+	
 	@Test
 	public void test() throws IOException {
-		Calculator calculator = new Calculator();
-		int sum = calculator.calcSum(getClass().getResource("number.txt").getPath());
-		
-		assertThat(sum, is(10));
+		assertThat(calculator.calcSum(numFilepath), is(10));
+	}
+	
+	@Test
+	public void multiplayOfNumber() throws IOException {
+		assertThat(calculator.calMultiply(numFilepath), is(30));
 	}
 
 }
