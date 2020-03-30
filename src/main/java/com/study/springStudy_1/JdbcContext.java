@@ -47,7 +47,7 @@ public class JdbcContext {
 				Field[] filed = className.getDeclaredFields();
 				for(Field f:filed) {
 					int i =1; 
-					obj.getClass()
+					obj.getClass())
 					 rs.getString(i);
 				}
 			}

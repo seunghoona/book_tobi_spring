@@ -19,20 +19,10 @@ public class DaoFactory {
 		dataSource.setPassword("hr");
 		return dataSource;
 	}
-	  
-	
-	@Bean
-	public JdbcContext jdbcContext() {
-		JdbcContext jdbcContext = new JdbcContext();
-		jdbcContext.setDataSouce(dataSource());
-		return jdbcContext;
-	}
-	
 	@Bean
 	public UserDao userDao() {
 		UserDao userDao = new UserDao();
 		userDao.setDataSource(dataSource());
-		userDao.setJdbcContext(jdbcContext());
 		return userDao;
 	}
 	

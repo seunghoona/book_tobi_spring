@@ -16,9 +16,13 @@ public class UserDao {
 	public void setJdbcContext(JdbcContext jdbcContext) {
 		this.jdbcContext = jdbcContext;
 	}
-	
+	//수정자 메소드이면서 JDBCContext에 대한 생성 DI 작업을 동시에 수행한다. 
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+		this.jdbcContext= new JdbcContext(); //jdbc 생성(IOC)
+		this.jdbcContext.setDataSouce (dataSource);
+		
+		//아직 jdbcContext를 적용하지 않는 메소드를 위해 저장 
+		this.dataSource =dataSource;
 	}
 
 	public void add(User user) throws  SQLException {
