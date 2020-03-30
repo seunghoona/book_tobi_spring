@@ -7,37 +7,38 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+
 public class UserDao {
 
-	private JdbcContext jdbcContext;
+	private JdbcTemplate jdbcTemplate;
 	
 	private DataSource dataSource;
 
-	public void setJdbcContext(JdbcContext jdbcContext) {
-		this.jdbcContext = jdbcContext;
-	}
-	//수정자 메소드이면서 JDBCContext에 대한 생성 DI 작업을 동시에 수행한다. 
+
 	public void setDataSource(DataSource dataSource) {
-		this.jdbcContext= new JdbcContext(); //jdbc 생성(IOC)
-		this.jdbcContext.setDataSouce (dataSource);
+		this.jdbcTemplate= new JdbcTemplate(dataSource); 
 		
 		//아직 jdbcContext를 적용하지 않는 메소드를 위해 저장 
 		this.dataSource =dataSource;
 	}
 
 	public void add(User user) throws  SQLException {
-		this.jdbcContext.workWithStatementStrategy(new StatementStrategy (){
-
-			@Override
-			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-
-				PreparedStatement ps = c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)");
-				ps.setString(1, user.getId());
-				ps.setString(2, user.getName());
-				ps.setString(3, user.getPassword());
-				return ps;
-			}
-		});
+		
+		/*
+		 * this.jdbcTemplate.workWithStatementStrategy(new StatementStrategy() {
+		 * 
+		 * @Override public PreparedStatement makePreparedStatement(Connection c) throws
+		 * SQLException {
+		 * 
+		 * PreparedStatement ps =
+		 * c.prepareStatement("INSERT INTO USERTB VALUES(?,?,?)"); ps.setString(1,
+		 * user.getId()); ps.setString(2, user.getName()); ps.setString(3,
+		 * user.getPassword()); return ps; } });
+		 */
+		
+		this.jdbcTemplate.update("INSERT INTO USERTB VALUES(?,?,?)",user.getId(),user.getName(),user.getPassword());
 	}
 
 	public User get(String id) throws SQLException, ClassNotFoundException {
@@ -84,7 +85,19 @@ public class UserDao {
 	 * ----------------------------------------------------------------------------------
 	 */
 	public void deleteAll() throws SQLException {
-		this.jdbcContext.executeSql("DELETE FROM USERTB");
+		/* this.jdbcTemplate.executeSql("DELETE FROM USERTB"); */
+		//방법 1
+		this.jdbcTemplate.update(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				
+				return con.prepareStatement("DELETE FROM USERTB");
+			}
+		});
+		
+		//방법 2 
+		this.jdbcTemplate.update("DELETE FROM USERTB");
 	}
 
 	/**

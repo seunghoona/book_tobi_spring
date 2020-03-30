@@ -11,6 +11,7 @@ public class Calculator {
 			
 			@Override
 			public Integer doSomeThingWithLine(String line, Integer value) {
+				
 				return value+Integer.valueOf(line);
 			}
 		};
@@ -21,7 +22,7 @@ public class Calculator {
 		LineCallback<Integer> sumCallBack = new LineCallback<Integer>() {
 			@Override
 			public Integer doSomeThingWithLine(String line, Integer value) {
-				return value+Integer.valueOf(line);
+				return value*Integer.valueOf(line);
 			}
 		};
 		return lineReadTemplate(filePath,sumCallBack,1);
@@ -71,9 +72,10 @@ public class Calculator {
 	
 	public <T> T lineReadTemplate(String filePath, LineCallback<T> callback, T initVal) throws IOException{
 		BufferedReader br = null;
+		T res = null;
 		try {
 			br = new BufferedReader(new FileReader(filePath));
-			T res = initVal;
+			res = initVal;
 			String line = null;
 			while((line = br.readLine()) != null){
 				//각 라인의 내용을 가지고 계산하는 작업만 콜백에게 맡긴다.
@@ -82,6 +84,6 @@ public class Calculator {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return initVal;
+		return res;
 	}
 }

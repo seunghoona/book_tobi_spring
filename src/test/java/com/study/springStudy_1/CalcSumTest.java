@@ -31,17 +31,17 @@ public class CalcSumTest {
 	
 	@Test
 	public void test() throws IOException {
-		assertThat(calculator.calcSum(numFilepath), is(10));
+		assertThat(calculator.calcSum(numFilepath), is(15));
 	}
 	
 	@Test
 	public void multiplayOfNumber() throws IOException {
-		assertThat(calculator.calMultiply(numFilepath), is(30));
+		assertThat(calculator.calMultiply(numFilepath), is(120));
 	}
 	
 	@Test
 	public void concatenateStrings() throws IOException {
-		assertThat(calculator.concatenate(numFilepath), is("235"));
+		assertThat(calculator.concatenate(numFilepath), is("12345"));
 	}
 
 }
