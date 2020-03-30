@@ -38,5 +38,10 @@ public class CalcSumTest {
 	public void multiplayOfNumber() throws IOException {
 		assertThat(calculator.calMultiply(numFilepath), is(30));
 	}
+	
+	@Test
+	public void concatenateStrings() throws IOException {
+		assertThat(calculator.concatenate(numFilepath), is("235"));
+	}
 
 }

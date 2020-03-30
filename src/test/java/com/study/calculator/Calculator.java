@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Calculator {
 
 	public Integer calcSum(String filePath) throws IOException {
-		LineCallback subCallBack = new LineCallback() {
+		LineCallback<Integer> subCallBack = new LineCallback<Integer>() {
 			
 			@Override
 			public Integer doSomeThingWithLine(String line, Integer value) {
@@ -18,7 +18,7 @@ public class Calculator {
 	}
 	
 	public Integer calMultiply(String filePath) throws IOException {
-		LineCallback sumCallBack = new LineCallback() {
+		LineCallback<Integer> sumCallBack = new LineCallback<Integer>() {
 			@Override
 			public Integer doSomeThingWithLine(String line, Integer value) {
 				return value+Integer.valueOf(line);
@@ -27,10 +27,23 @@ public class Calculator {
 		return lineReadTemplate(filePath,sumCallBack,1);
 	}
 	
+	public String concatenate(String filePath) throws IOException{
+		LineCallback<String> concatenateCallback = 
+			new LineCallback<String>() {
+				
+				@Override
+				public String doSomeThingWithLine(String line, String value) {
+					return value+line;
+				}
+			};
+		return lineReadTemplate(filePath, concatenateCallback, "");
+	}
+	
 	
 /*	*//**
 	 * @param filePath
 	 * @param callBack
+ * @return 
 	 * @return
 	 * @throws IOException
 	 * 설	명 : 파일을 읽어 들이는 메소드 
@@ -56,11 +69,11 @@ public class Calculator {
 		}
 	}*/
 	
-	public Integer lineReadTemplate(String filePath, LineCallback callback, int initVal) throws IOException{
+	public <T> T lineReadTemplate(String filePath, LineCallback<T> callback, T initVal) throws IOException{
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(filePath));
-			Integer res = initVal;
+			T res = initVal;
 			String line = null;
 			while((line = br.readLine()) != null){
 				//각 라인의 내용을 가지고 계산하는 작업만 콜백에게 맡긴다.

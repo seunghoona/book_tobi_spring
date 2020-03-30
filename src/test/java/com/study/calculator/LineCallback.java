@@ -1,5 +1,5 @@
 package com.study.calculator;
 
-public interface LineCallback {
-	Integer doSomeThingWithLine(String line , Integer value);
+public interface LineCallback<T> {
+	T doSomeThingWithLine(String line , T value);
 }
