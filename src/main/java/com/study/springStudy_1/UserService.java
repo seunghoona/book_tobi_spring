@@ -1,5 +1,6 @@
 package com.study.springStudy_1;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.study.springStudy_1.User.Level;
@@ -30,5 +31,11 @@ public class UserService {
 			if(changed) {userDao.update(user);}
 			
 		}
+	}
+
+
+	public void add(User user) throws SQLException {
+		if(user.getLevel() == null) user.setLevel(Level.BASIC);
+		userDao.add(user);
 	}
 }

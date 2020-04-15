@@ -1,7 +1,6 @@
 package com.study.springStudy_1;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -10,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class UserServiceTest {
 	@Before
 	public void setUp() {
 		users = Arrays.asList(
-					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC,49,49),
+					new User("bumjin","박범진"  ,"1" ,null,49,49),
 					new User("coytouch","강명성","2" ,User.Level.BASIC,50,50),
 					new User("drwins","신승환"  ,"3" ,User.Level.SILVER,60,40),
 					new User("eadnite1","이상호","4" ,User.Level.SILVER,60,60),
@@ -50,6 +50,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
+	@Ignore
 	public void upgradeLevels() throws SQLException, ClassNotFoundException {
 		
 		userDao.deleteAll();
@@ -74,5 +75,25 @@ public class UserServiceTest {
 	private void checkLevel(User user, Level expectedLevel) throws ClassNotFoundException, SQLException {
 		User userUpdate = userDao.get(user.getId());
 		assertThat(userUpdate.getLevel(), is(expectedLevel));
+	}
+	
+	
+	@Test
+	public void add() throws SQLException, ClassNotFoundException {
+		userDao.deleteAll();
+		
+		User userWithLevel    = users.get(4); //GOLDE 레벨 
+		User userWithoutLevel = users.get(0); //레벨이 비어있는 사용자 로직에 따라 등록중에 Basic 레벨도 설정되어야한다.
+		
+		userService.add(userWithLevel);
+		userService.add(userWithoutLevel);
+		
+		User userWithLevelRead    = userDao.get(userWithLevel.getId());
+		User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
+		
+		
+		assertThat(userWithLevelRead.getLevel(), is(userWithLevel.getLevel()));
+		assertThat(userWithoutLevelRead.getLevel(), is(userWithoutLevelRead.getLevel()));
+		
 	}
 }
