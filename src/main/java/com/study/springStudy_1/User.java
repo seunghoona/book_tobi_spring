@@ -5,16 +5,50 @@ public class User {
 	String id ;
 	String name ;
 	String password;
+	Level level;
+	int Login;
+	int Recommend;
+	
+	enum Level{
+		 BASIC(1)
+		,SILVER(2)
+		,GOLD(3);
+		
+		private final int value ;
+		
+		private Level(int value) {
+			this.value = value;
+		}
+		
+		public int getValue() {
+			return value;
+		}
+		//값으로부터 LEVEL 타입 오브젝트를 가져오도록 만든 스태틱 메소드 
+		public static Level valueOf(int value){
+			switch(value) {
+			case 1: return BASIC;
+			case 2: return SILVER;
+			case 3: return GOLD;
+			default : throw new AssertionError("열려지지 않는 값입니다. "+value);
+			
+			}
+		}
+		
+	}
 
-	public User(String id, String name, String password) {
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public User(String id, String name, String password, Level level, int login, int recommend) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.password = password;
-	}
-	
-	public User() {
-		super();
+		this.level = level;
+		Login = login;
+		Recommend = recommend;
 	}
 
 	public String getId() {
@@ -35,6 +69,39 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public Level getLevel() {
+		return level;
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+
+	public int getLogin() {
+		return Login;
+	}
+
+	public void setLogin(int login) {
+		Login = login;
+	}
+
+	public int getRecommend() {
+		return Recommend;
+	}
+
+	public void setRecommend(int recommend) {
+		Recommend = recommend;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", password=" + password + ", level=" + level + ", Login=" + Login
+				+ ", Recommend=" + Recommend + "]";
+	}
+
+	
+	
 	
 	
 }

@@ -5,14 +5,10 @@ import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,7 +25,7 @@ public class userDaoTemplateAbstractTest {
 
 	@Before
 	public void setUp() {
-		 user1 = new User("test2","김승후","1");
+		/* user1 = new User("test2","김승후","1"); */
 	}
 	
 	

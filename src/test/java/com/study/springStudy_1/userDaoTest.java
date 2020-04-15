@@ -31,9 +31,9 @@ public class userDaoTest {
 	
 	@Before
 	public void setUp() {
-		 user1 = new User("test1","김승후","1");
-		 user2 = new User("test2","이승후","2");
-		 user3 = new User("test3","박승후","3");
+		 user1 = new User("test1","김승후","1",User.Level.BASIC,1,0);
+		 user2 = new User("test2","이승후","2",User.Level.SILVER,55,10);
+		 user3 = new User("test3","박승후","3",User.Level.GOLD,100,40);
 	}
 	
 	@Test
@@ -44,6 +44,7 @@ public class userDaoTest {
 		dao.deleteAll();
 		
 		assertThat(dao.getCount(), is(0));
+		System.out.println(user1);
 		dao.add(user1);
 
 		assertThat(dao.getCount(), is(1));
@@ -55,21 +56,19 @@ public class userDaoTest {
 		assertThat(dao.getCount(), is(3));
 		
 		User userget1 = dao.get(user1.getId());
+		checkSameUser(userget1, user1);
 		User userget2 = dao.get(user2.getId());
-		
-		System.out.println(userget1.getName());
-		System.out.println(userget2.getName());
-		
-		// get 메소드 테스트 
-		// 예외조건에 대한 테스트 
-		assertThat(userget1.getName(), is(user1.getName()));
-		assertThat(userget1.getPassword(), is(user1.getPassword()));
-		
-		assertThat(userget2.getName(), is(user2.getName()));
-		assertThat(userget2.getPassword(), is(user2.getPassword()));
-		
-		
+		checkSameUser(userget2, user2);
 	}
 	
+	
+	private void checkSameUser(User user1, User user2) {
+		assertThat(user1.getId()          , is(user2.getId()));
+		assertThat(user1.getName()        , is(user2.getName()));
+		assertThat(user1.getPassword()    , is(user2.getPassword()));
+		assertThat(user1.getLevel()       , is(user2.getLevel()));
+		assertThat(user1.getLogin()       , is(user2.getLogin()));
+		assertThat(user1.getRecommend()   , is(user2.getRecommend()));
+	}
 	
 }
