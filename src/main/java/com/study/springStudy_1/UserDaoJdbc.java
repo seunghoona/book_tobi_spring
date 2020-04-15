@@ -2,6 +2,7 @@ package com.study.springStudy_1;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -38,6 +39,13 @@ public class UserDaoJdbc implements UserDao {
 				}
 			};
 	
+
+	@Override
+	public List<User> getAll() {
+		return this.jdbcTemplate.query("SELECT * FROM USERTB ORDER BY ID",this.userMapper);
+	}
+		
+			
 	@Override
 	public void add(User user) throws  SQLException {
 		
@@ -53,8 +61,8 @@ public class UserDaoJdbc implements UserDao {
 		 * user.getPassword()); return ps; } });
 		 */
 		
-		this.jdbcTemplate.update("INSERT INTO USERTB(ID,NAME,PASSWORD,LEVELINT,LOGIN,RECOMMEND) VALUES(?,?,?,?,?,?)"
-				,user.getId(),user.getName(),user.getPassword() ,user.getLevel().getValue(),user.getLogin(),user.getRecommend());
+		this.jdbcTemplate.update("INSERT INTO USERTB(ID,NAME,PASSWORD,LOGIN,RECOMMEND,LEVELINT) VALUES(?,?,?,?,?,?)"
+				,user.getId(),user.getName(),user.getPassword() ,user.getLogin(),user.getRecommend(),user.getLevel().getValue());
 	}
 
 	@Override
@@ -136,20 +144,18 @@ public class UserDaoJdbc implements UserDao {
 	public void update(User user) {
 		// TODO Auto-generated method stub
 		this.jdbcTemplate.update("UPDATE USERTB SET "
-				+ "name     = ?"
-				+ "password = ?"
-				+ "level    = ?"
-				+ "login    = ?"
-				+ "recommend= ?"
+				+ " name     = ?"
+				+ ",password = ?"
+				+ ",login    = ?"
+				+ ",recommend= ?"
+				+ ",levelint = ?"
 				+ "where id = ?",
 				 user.getName()
 				,user.getPassword()
-				,user.getLevel()
-				,user.getLogin()
 				,user.getRecommend()
+				,user.getLogin()
+				,user.getLevel().getValue()
 				,user.getId());
 	}
-
-
 
 }

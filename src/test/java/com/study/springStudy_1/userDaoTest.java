@@ -19,7 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DaoFactory.class)
+/* @ContextConfiguration(classes = DaoFactory.class) */
+@ContextConfiguration(locations="/applicationContext.xml") 
 //테스트 메소드에서 애플리케이션 컨텍스트 구성이나 상태를 변경한다는 것을 알려줌
 public class userDaoTest {
 	
@@ -64,18 +65,18 @@ public class userDaoTest {
 	}
 	
 	// 사용자 수정을 테스트
+	@Test
 	public void update() throws SQLException, ClassNotFoundException {
 		dao.deleteAll();
 		
 		dao.add(user1); //수정할 사용자
 		dao.add(user2); //수정하지 않을 사용자
 		
-		user1.setId("test7");
 		user1.setName("반세기");
 		user1.setPassword("9");
 		user1.setLevel(User.Level.GOLD);
 		user1.setLogin(3);
-		user1.setRecommend(42);
+		user1.setRecommend(42); 
 		
 		dao.update(user1);
 		

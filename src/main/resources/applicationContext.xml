@@ -5,6 +5,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 	
 	<beans>
+		
 		<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 			<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"/>
 			<property name="url" value="Jdbc:oracle:thin:@nacinaci.cafe24.com:1522:xe"/>
@@ -13,13 +14,12 @@
 		</bean>
 		
 		<bean id="userDao" class="com.study.springStudy_1.UserDaoJdbc">
-			<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+			<property name="dataSource" ref="dataSource"></property>
 		</bean>
-		
+		<!-- 메소드와 이름을 동일하게 할것 -->
 		<bean id="userService" class="com.study.springStudy_1.UserService">
-			<property name="userService" ref="userDao"></property>
+			<property name="userDao" ref="userDao"></property>
 		</bean>
-		
 		
 	</beans>
 
