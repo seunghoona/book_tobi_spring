@@ -7,8 +7,10 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 public class UserDao {
 
@@ -117,19 +119,22 @@ public class UserDao {
 	 */
 	public int getCount() throws SQLException, ClassNotFoundException {
 
-		Connection c = dataSource.getConnection();
-		int count =0;
-		PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM USERTB");
+		return this.jdbcTemplate.query(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				
+				return con.prepareStatement("SELECT COUNT(*) FROM USERTB");
+			}
+		}, new ResultSetExtractor<Integer>() {
 
-		ResultSet rs = ps.executeQuery();
-		if(rs.next()) {
-			count = rs.getInt(1);
-		}
-
-		rs.close();
-		ps.close();
-		c.close();
-		return count;
+			@Override
+			public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+				rs.next();
+				return rs.getInt(1);
+			}
+			
+		});
 	}
 
 
