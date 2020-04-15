@@ -11,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 
 public class UserDao {
 
@@ -21,11 +22,21 @@ public class UserDao {
 
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate= new JdbcTemplate(dataSource); 
-		
-		//아직 jdbcContext를 적용하지 않는 메소드를 위해 저장 
-		this.dataSource =dataSource;
 	}
 
+	private RowMapper<User> userMapper = 
+			new RowMapper<User>() {
+				
+				@Override
+				public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+					User user = new User();
+					user.setId(rs.getString("id"));
+					user.setName(rs.getString("name"));
+					user.setPassword(rs.getString("password"));
+					return user;
+				}
+			};
+	
 	public void add(User user) throws  SQLException {
 		
 		/*
@@ -44,30 +55,7 @@ public class UserDao {
 	}
 
 	public User get(String id) throws SQLException, ClassNotFoundException {
-
-		Connection c = dataSource.getConnection();
-
-		PreparedStatement ps = c.prepareStatement("SELECT * FROM USERTB WHERE ID = ?");
-
-
-		ps.setString(1, id);
-
-		ResultSet rs = ps.executeQuery();
-
-		User user =null;
-
-		if(rs.next()) {
-			user = new User();
-			user.setId(rs.getString("id"));
-			user.setName(rs.getString("name"));
-			user.setPassword(rs.getString("password"));
-		}
-
-		rs.close();
-		ps.close();
-		c.close();
-
-		return user;
+		return this.jdbcTemplate.queryForObject("SELECT * FROM USERTB WHERE ID = ? ", new Object[] {id}, this.userMapper);
 	}
 
 	/**
@@ -89,16 +77,17 @@ public class UserDao {
 	public void deleteAll() throws SQLException {
 		/* this.jdbcTemplate.executeSql("DELETE FROM USERTB"); */
 		//방법 1
-		this.jdbcTemplate.update(new PreparedStatementCreator() {
-			
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				
-				return con.prepareStatement("DELETE FROM USERTB");
-			}
-		});
+		/*
+		 * this.jdbcTemplate.update(new PreparedStatementCreator() {
+		 * 
+		 * @Override public PreparedStatement createPreparedStatement(Connection con)
+		 * throws SQLException {
+		 * 
+		 * return con.prepareStatement("DELETE FROM USERTB"); } });
+		 */
 		
 		//방법 2 
+		/* this.jdbcTemplate.update("DELETE FROM USERTB"); */
 		this.jdbcTemplate.update("DELETE FROM USERTB");
 	}
 
@@ -119,22 +108,22 @@ public class UserDao {
 	 */
 	public int getCount() throws SQLException, ClassNotFoundException {
 
-		return this.jdbcTemplate.query(new PreparedStatementCreator() {
-			
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				
-				return con.prepareStatement("SELECT COUNT(*) FROM USERTB");
-			}
-		}, new ResultSetExtractor<Integer>() {
-
-			@Override
-			public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-				rs.next();
-				return rs.getInt(1);
-			}
-			
-		});
+		/*
+		 * return this.jdbcTemplate.query(new PreparedStatementCreator() {
+		 * 
+		 * @Override public PreparedStatement createPreparedStatement(Connection con)
+		 * throws SQLException {
+		 * 
+		 * return con.prepareStatement("SELECT COUNT(*) FROM USERTB"); } }, new
+		 * ResultSetExtractor<Integer>() {
+		 * 
+		 * @Override public Integer extractData(ResultSet rs) throws SQLException,
+		 * DataAccessException { rs.next(); return rs.getInt(1); }
+		 * 
+		 * });
+		 */
+		
+			return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USERTB",Integer.class);
 	}
 
 
