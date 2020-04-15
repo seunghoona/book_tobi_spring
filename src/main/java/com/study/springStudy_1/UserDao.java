@@ -13,7 +13,10 @@ public interface UserDao {
 	User get(String id) throws SQLException, ClassNotFoundException;
 
 	void deleteAll() throws SQLException;
-
+	
 	int getCount() throws SQLException, ClassNotFoundException;
+
+	void update(User user);
+	
 
 }

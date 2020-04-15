@@ -132,6 +132,24 @@ public class UserDaoJdbc implements UserDao {
 			return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USERTB",Integer.class);
 	}
 
+	@Override
+	public void update(User user) {
+		// TODO Auto-generated method stub
+		this.jdbcTemplate.update("UPDATE USERTB SET "
+				+ "name     = ?"
+				+ "password = ?"
+				+ "level    = ?"
+				+ "login    = ?"
+				+ "recommend= ?"
+				+ "where id = ?",
+				 user.getName()
+				,user.getPassword()
+				,user.getLevel()
+				,user.getLogin()
+				,user.getRecommend()
+				,user.getId());
+	}
+
 
 
 }
