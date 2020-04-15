@@ -12,9 +12,15 @@
 			<property name="password" value="hr"/>
 		</bean>
 		
-		<bean id="userDao" class="com.study.springStudy_1.UserDaoDeleteAll">
+		<bean id="userDao" class="com.study.springStudy_1.UserDaoJdbc">
 			<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
 		</bean>
+		
+		<bean id="userService" class="com.study.springStudy_1.UserService">
+			<property name="userService" ref="userDao"></property>
+		</bean>
+		
+		
 	</beans>
 
 </beans>

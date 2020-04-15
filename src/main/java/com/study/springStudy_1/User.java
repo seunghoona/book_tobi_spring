@@ -24,7 +24,7 @@ public class User {
 			return value;
 		}
 		//값으로부터 LEVEL 타입 오브젝트를 가져오도록 만든 스태틱 메소드 
-		public static Level valueOf(int value){
+		public static  Level valueOf(int value){
 			switch(value) {
 			case 1: return BASIC;
 			case 2: return SILVER;
