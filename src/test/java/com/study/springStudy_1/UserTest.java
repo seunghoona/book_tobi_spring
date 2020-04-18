@@ -28,7 +28,6 @@ public class UserTest {
 			assertThat(user.getLevel(), is(level.nextLevel()));
 		}
 	}
-
 	
 	@Test(expected = IllegalStateException.class)
 	public void upgradeLevelExceotion() {

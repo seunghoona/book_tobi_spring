@@ -48,34 +48,50 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	@Ignore
 	public void upgradeLevels() throws SQLException, ClassNotFoundException {
 		
 		userDao.deleteAll();
-		
 		
 		for(User user: users) {
 			userDao.add(user);
 		} 
 		userService.upgradeLevels();
 		List<User> users2 =userDao.getAll();
-
-		checkLevel(users2.get(0), User.Level.BASIC);
-		checkLevel(users2.get(1), User.Level.SILVER);
-		checkLevel(users2.get(2), User.Level.GOLD);
-		checkLevel(users2.get(3), User.Level.GOLD);
-		checkLevel(users2.get(4), User.Level.GOLD);
+		
+		for(User user : users2) {
+			System.out.println(user);
+		}
+		
+		
+		checkLevelUpgraded(users2.get(0), false);
+		checkLevelUpgraded(users2.get(1), true);
+		checkLevelUpgraded(users2.get(2), false);
+		checkLevelUpgraded(users2.get(3), true);
+		checkLevelUpgraded(users2.get(4), false);
 		
 	}
 	
-	
+	//기존방식에서 아래방식으로 변경 
 	private void checkLevel(User user, Level expectedLevel) throws ClassNotFoundException, SQLException {
 		User userUpdate = userDao.get(user.getId());
 		assertThat(userUpdate.getLevel(), is(expectedLevel));
 	}
 	
+	private void checkLevelUpgraded(User user, boolean upgraded) throws ClassNotFoundException, SQLException {
+		User userUpdate = userDao.get(user.getId());
+		
+		if(upgraded) {
+			//조회한 유저의 정보가 다음 레벨과 같은가 
+			assertThat(userUpdate.getLevel().nextLevel(), is(user.getLevel().nextLevel()));
+		}else {
+			//조회한 현재 레벨이  지금 현재 레벨과 같은가 
+			assertThat(userUpdate.getLevel(), is(user.getLevel()));
+		}
+	}
+	
 	
 	@Test
+	@Ignore
 	public void add() throws SQLException, ClassNotFoundException {
 		userDao.deleteAll();
 		
