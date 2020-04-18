@@ -40,8 +40,6 @@ public class UserService {
 		 * if(user.getLevel() == Level.BASIC) user.setLevel(User.Level.GOLD);
 		 * userDao.update(user);
 		 */
-		
-		
 		user.upgradeLevel();
 		userDao.update(user);
 	}

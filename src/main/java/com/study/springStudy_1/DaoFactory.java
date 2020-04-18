@@ -33,6 +33,12 @@ public class DaoFactory {
 		return userService;
 	}
 	
+	@Bean 
+	public User user() {
+		return new User();
+	}
+	
+	
 	/*
 	 * @Bean public ConnectionMaker connectionMaker() { //DI 주입 //운영 개발 로컬 접속정보를 쉽게
 	 * 주입하여 변경할 수 있다. return new LocalDBConnectionMaker(); return new
