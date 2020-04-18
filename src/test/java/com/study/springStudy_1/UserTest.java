@@ -20,8 +20,8 @@ public class UserTest {
 	@Test
 	public void upgradeLevel() {
 		Level[] levels = Level.values();
+		//정의된 레벨을 전부 가져온다. 
 		for(Level level : levels) {
-			
 			if(level.nextLevel() == null) continue;
 			user.setLevel(level);
 			user.upgradeLevel();

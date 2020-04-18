@@ -38,6 +38,10 @@ public class DaoFactory {
 		return new User();
 	}
 	
+	@Bean 
+	public UserLevelUpgradePolicy userLevelUpgradePolicy() {
+		return new UserLevelDefault();
+	}
 	
 	/*
 	 * @Bean public ConnectionMaker connectionMaker() { //DI 주입 //운영 개발 로컬 접속정보를 쉽게
