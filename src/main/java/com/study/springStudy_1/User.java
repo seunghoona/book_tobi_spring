@@ -1,5 +1,7 @@
 package com.study.springStudy_1;
 
+import java.util.Date;
+
 public class User {
 	
 	String id ;
@@ -9,15 +11,22 @@ public class User {
 	int Login;
 	int Recommend;
 	
+	// 가장 최근에 레벨을 변경한 일자를 User오브젝트에 남기기 
+	Date lastUpgraded;
+	
+	
 	enum Level{
-		 BASIC(1)
-		,SILVER(2)
-		,GOLD(3);
+		
+		 GOLD  (3,null)
+		,SILVER(2,GOLD)
+		,BASIC (1,SILVER);
 		
 		private final int value ;
+		private final Level next;
 		
-		private Level(int value) {
+		private Level(int value, Level next) {
 			this.value = value;
+			this.next  = next;
 		}
 		
 		public int getValue() {
@@ -32,6 +41,10 @@ public class User {
 			default : throw new AssertionError("열려지지 않는 값입니다. "+value);
 			
 			}
+		}
+		
+		public Level nextLevel() {
+			return this.next;
 		}
 		
 	}
@@ -94,15 +107,22 @@ public class User {
 		Recommend = recommend;
 	}
 
+	
+	public void upgradeLevel() {
+		Level nextLevel = this.level.nextLevel();
+		if(nextLevel == null) {
+			throw new IllegalStateException(this.level+"은 업그레이드가 불가능합니다.");
+		}else {
+			this.level = nextLevel;
+			this.lastUpgraded = new Date();
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password + ", level=" + level + ", Login=" + Login
 				+ ", Recommend=" + Recommend + "]";
 	}
-
-	
-	
-	
 	
 }
 

@@ -33,15 +33,13 @@ public class UserServiceTest {
 	@Before
 	public void setUp() {
 		users = Arrays.asList(
-					new User("bumjin","박범진"  ,"1" ,null,49,49),
+					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC,49,49),
 					new User("coytouch","강명성","2" ,User.Level.BASIC,50,50),
 					new User("drwins","신승환"  ,"3" ,User.Level.SILVER,60,40),
 					new User("eadnite1","이상호","4" ,User.Level.SILVER,60,60),
 					new User("freen","오민규"   ,"5" ,User.Level.GOLD,100,100)
 				);
 	}
-
-	
 	
 	@Test
 	//NULL체크 
@@ -58,7 +56,6 @@ public class UserServiceTest {
 		
 		for(User user: users) {
 			userDao.add(user);
-			
 		} 
 		userService.upgradeLevels();
 		List<User> users2 =userDao.getAll();
