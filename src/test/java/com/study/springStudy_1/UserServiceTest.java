@@ -17,10 +17,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.study.springStudy_1.User.Level;
+import static com.study.springStudy_1.UserService.MIN_LOGCOUNT_FOR_SILVER;
+import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactory.class)
 public class UserServiceTest {
+	
+	
 	
 	@Autowired
 	UserService userService;
@@ -33,11 +37,11 @@ public class UserServiceTest {
 	@Before
 	public void setUp() {
 		users = Arrays.asList(
-					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC,49,49),
-					new User("coytouch","강명성","2" ,User.Level.BASIC,50,50),
-					new User("drwins","신승환"  ,"3" ,User.Level.SILVER,60,40),
-					new User("eadnite1","이상호","4" ,User.Level.SILVER,60,60),
-					new User("freen","오민규"   ,"5" ,User.Level.GOLD,100,100)
+					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC ,MIN_LOGCOUNT_FOR_SILVER-1,49),
+					new User("coytouch","강명성","2" ,User.Level.BASIC ,50 ,MIN_LOGCOUNT_FOR_SILVER),
+					new User("drwins","신승환"  ,"3" ,User.Level.SILVER,60 ,MIN_LOGCOUNT_FOR_SILVER-10),
+					new User("eadnite1","이상호","4" ,User.Level.SILVER,60 ,MIN_RECOMMEND_FOR_GOLD-1),
+					new User("freen","오민규"   ,"5" ,User.Level.GOLD  ,100,MIN_RECOMMEND_FOR_GOLD)
 				);
 	}
 	
