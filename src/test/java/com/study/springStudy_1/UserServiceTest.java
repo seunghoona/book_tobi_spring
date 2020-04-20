@@ -127,6 +127,7 @@ public class UserServiceTest {
 		//강제 예외를 발생시키기 위해서 TEST에서 직접적으로 객체를 생성한경우 nULL 문제가 발생하였다 해당 문제를 해결하기 위해서 
 		//직접 해당 객체를 주입해주었다.
 		testUserService.setUserLevelUpgradePolicy(this.userLeveUpgradePlicy);
+		System.out.println(this.dataSource);
 		testUserService.setDataSource(this.dataSource);
 		userDao.deleteAll();
 		for(User user: users) userDao.add(user);
