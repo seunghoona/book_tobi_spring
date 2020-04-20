@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -36,6 +38,9 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserLevelUpgradePolicy userLeveUpgradePlicy;
+	
+	@Autowired
+	DataSource dataSource;
 	
 	
 	@Before
@@ -122,7 +127,7 @@ public class UserServiceTest {
 		//강제 예외를 발생시키기 위해서 TEST에서 직접적으로 객체를 생성한경우 nULL 문제가 발생하였다 해당 문제를 해결하기 위해서 
 		//직접 해당 객체를 주입해주었다.
 		testUserService.setUserLevelUpgradePolicy(this.userLeveUpgradePlicy);
-		
+		testUserService.setDataSource(this.dataSource);
 		userDao.deleteAll();
 		for(User user: users) userDao.add(user);
 		
