@@ -9,9 +9,6 @@ public class UserLeveEvent implements UserLevelUpgradePolicy {
 	private final int MIN_LOGCOUNT_FOR_SILVER = 100;
 	private final int MIN_RECOMMEND_FOR_GOLD = 100;
 	
-	@Autowired
-	UserDao userDao;
-	
 	@Override
 	//업그레이드가 가능한가? 
 	public boolean canUpgradeLevel(User user) {
@@ -25,7 +22,7 @@ public class UserLeveEvent implements UserLevelUpgradePolicy {
 	}
 
 	@Override
-	public void upgradeLevel(User user) {
+	public void upgradeLevel(User user,UserDao userDao) {
 		user.upgradeLevel();
 		userDao.update(user);
 	}

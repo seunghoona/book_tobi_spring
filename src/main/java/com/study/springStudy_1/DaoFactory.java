@@ -38,7 +38,7 @@ public class DaoFactory {
 		return new User();
 	}
 	
-	@Bean 
+	@Bean
 	public UserLevelUpgradePolicy userLevelUpgradePolicy() {
 		return new UserLevelDefault();
 	}

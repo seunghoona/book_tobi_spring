@@ -146,15 +146,15 @@ public class UserDaoJdbc implements UserDao {
 		this.jdbcTemplate.update("UPDATE USERTB SET "
 				+ " name     = ?"
 				+ ",password = ?"
+				+ ",levelint = ?"
 				+ ",login    = ?"
 				+ ",recommend= ?"
-				+ ",levelint = ?"
 				+ "where id = ?",
 				 user.getName()
 				,user.getPassword()
-				,user.getRecommend()
-				,user.getLogin()
 				,user.getLevel().getValue()
+				,user.getLogin()
+				,user.getRecommend()
 				,user.getId());
 	}
 

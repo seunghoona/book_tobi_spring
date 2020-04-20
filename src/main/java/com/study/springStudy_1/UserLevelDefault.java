@@ -1,16 +1,13 @@
 package com.study.springStudy_1;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import static com.study.springStudy_1.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;;
+import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;;
 
 public class UserLevelDefault implements UserLevelUpgradePolicy {
 
-	@Autowired
-	UserDao userDao;
-	
-	
 	@Override
 	//업그레이드가 가능한가? 
 	public boolean canUpgradeLevel(User user) {
@@ -24,7 +21,7 @@ public class UserLevelDefault implements UserLevelUpgradePolicy {
 	}
 
 	@Override
-	public void upgradeLevel(User user) {
+	public void upgradeLevel(User user, UserDao userDao) {
 		user.upgradeLevel();
 		userDao.update(user);
 	}

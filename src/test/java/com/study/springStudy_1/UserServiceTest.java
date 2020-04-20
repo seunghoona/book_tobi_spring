@@ -1,8 +1,11 @@
 package com.study.springStudy_1;
 
+import static com.study.springStudy_1.UserService.MIN_LOGCOUNT_FOR_SILVER;
+import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -16,15 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.study.springStudy_1.User.Level;
-import static com.study.springStudy_1.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;;
+import com.study.springStudy_1.TestUserService.TestUserServiceServiceException;
+import com.study.springStudy_1.User.Level;;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactory.class)
 public class UserServiceTest {
-	
-	
 	
 	@Autowired
 	UserService userService;
@@ -34,24 +34,20 @@ public class UserServiceTest {
 	@Autowired
 	UserDao userDao;
 	
+	
 	@Before
 	public void setUp() {
 		users = Arrays.asList(
-					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC ,MIN_LOGCOUNT_FOR_SILVER-1,49),
-					new User("coytouch","강명성","2" ,User.Level.BASIC ,MIN_LOGCOUNT_FOR_SILVER ,50),
-					new User("drwins","신승환"  ,"3" ,User.Level.SILVER,MIN_LOGCOUNT_FOR_SILVER+10 ,60),
-					new User("eadnite1","이상호","4" ,User.Level.SILVER,60 ,MIN_RECOMMEND_FOR_GOLD-1),
-					new User("freen","오민규"   ,"5" ,User.Level.GOLD  ,100,MIN_RECOMMEND_FOR_GOLD)
+					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER-1  ,49),
+					new User("coytouch","강명성","2" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER    ,50),
+					new User("drwins","신승환"  ,"3" ,User.Level.SILVER    ,MIN_LOGCOUNT_FOR_SILVER+10 ,60),
+					new User("eadnite1","이상호","4" ,User.Level.SILVER    ,60                         ,MIN_RECOMMEND_FOR_GOLD-1),
+					new User("freen","오민규"   ,"5" ,User.Level.GOLD      ,100                        ,MIN_RECOMMEND_FOR_GOLD)
 				);
 	}
 	
 	@Test
-	//NULL체크 
-	public void bean() {
-		assertNotNull(this.userDao);
-	}
-	
-	@Test
+	@Ignore
 	public void upgradeLevels() throws SQLException, ClassNotFoundException {
 		
 		userDao.deleteAll();
@@ -112,5 +108,24 @@ public class UserServiceTest {
 		assertThat(userWithLevelRead.getLevel(), is(userWithLevel.getLevel()));
 		assertThat(userWithoutLevelRead.getLevel(), is(userWithoutLevelRead.getLevel()));
 		
+	}
+	
+
+	@Test
+	public void UpgradeAllorNothing() throws SQLException, ClassNotFoundException {
+		UserService testUserService = new TestUserService(users.get(3).getId());
+		testUserService.setUserDao(this.userDao);
+		
+		userDao.deleteAll();
+		for(User user: users) userDao.add(user);
+		
+		try {
+			testUserService.upgradeLevels();
+			
+			fail("TestUserServiceExcpetion expected");
+			
+		}catch(TestUserServiceServiceException e) {}
+		//현재 이전 업그레이드가 이루어졌는지 체크 
+		checkLevelUpgraded(users.get(1), false);
 	}
 }
