@@ -15,8 +15,8 @@ public class UserService {
 	@Autowired
 	UserDao userDao;
 	
-	
-	UserLevelUpgradePolicy userLevelUpgradePolicy = new UserLevelDefault();
+	@Autowired
+	UserLevelUpgradePolicy userLevelUpgradePolicy;
 	
 	public static final int MIN_LOGCOUNT_FOR_SILVER = 50 ;
 	public static final int MIN_RECOMMEND_FOR_GOLD  = 30 ;
@@ -24,6 +24,10 @@ public class UserService {
 	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+	
+	public void setUserLevelUpgradePolicy(UserLevelUpgradePolicy userLevelUpgradePolicy) {
+		this.userLevelUpgradePolicy = userLevelUpgradePolicy;
 	}
 	
 	public void upgradeLevels() {
@@ -39,7 +43,7 @@ public class UserService {
 	//업그레이드가 가능한가? 
 
 	protected void upgradeLevel(User user) {
-		userLevelUpgradePolicy.upgradeLevel(user,userDao);
+		userLevelUpgradePolicy.upgradeLevel(user);
 	}
 
 	public void add(User user) throws SQLException {

@@ -2,6 +2,7 @@ package com.study.springStudy_1;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -26,7 +27,8 @@ public class DaoFactory {
 		return userDao;
 	}
 
-	@Bean 
+	@Bean
+	@Qualifier(value = "userService")
 	public UserService UserService() {
 		UserService userService = new UserService();
 		userService.setUserDao(userDao());

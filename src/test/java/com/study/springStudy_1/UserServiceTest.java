@@ -34,6 +34,9 @@ public class UserServiceTest {
 	@Autowired
 	UserDao userDao;
 	
+	@Autowired
+	UserLevelUpgradePolicy userLeveUpgradePlicy;
+	
 	
 	@Before
 	public void setUp() {
@@ -115,6 +118,10 @@ public class UserServiceTest {
 	public void UpgradeAllorNothing() throws SQLException, ClassNotFoundException {
 		UserService testUserService = new TestUserService(users.get(3).getId());
 		testUserService.setUserDao(this.userDao);
+		
+		//강제 예외를 발생시키기 위해서 TEST에서 직접적으로 객체를 생성한경우 nULL 문제가 발생하였다 해당 문제를 해결하기 위해서 
+		//직접 해당 객체를 주입해주었다.
+		testUserService.setUserLevelUpgradePolicy(this.userLeveUpgradePlicy);
 		
 		userDao.deleteAll();
 		for(User user: users) userDao.add(user);

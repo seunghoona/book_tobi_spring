@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;;
 
 public class UserLevelDefault implements UserLevelUpgradePolicy {
 
+	@Autowired
+	UserDao userDao;
+	
+	
 	@Override
 	//업그레이드가 가능한가? 
 	public boolean canUpgradeLevel(User user) {
@@ -21,7 +25,7 @@ public class UserLevelDefault implements UserLevelUpgradePolicy {
 	}
 
 	@Override
-	public void upgradeLevel(User user, UserDao userDao) {
+	public void upgradeLevel(User user) {
 		user.upgradeLevel();
 		userDao.update(user);
 	}

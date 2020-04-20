@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserLeveEvent implements UserLevelUpgradePolicy {
 	
+	@Autowired
+	UserDao userDao; 
+	
 	private final int MIN_LOGCOUNT_FOR_SILVER = 100;
 	private final int MIN_RECOMMEND_FOR_GOLD = 100;
 	
@@ -22,7 +25,7 @@ public class UserLeveEvent implements UserLevelUpgradePolicy {
 	}
 
 	@Override
-	public void upgradeLevel(User user,UserDao userDao) {
+	public void upgradeLevel(User user) {
 		user.upgradeLevel();
 		userDao.update(user);
 	}
