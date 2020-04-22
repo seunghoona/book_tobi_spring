@@ -7,7 +7,11 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.study.springStudy_1.User.Level;
@@ -40,9 +44,10 @@ public class UserService {
 	}
 	
 	public void upgradeLevels() throws SQLException {
-		TransactionSynchronizationManager.initSynchronization();
-		Connection c = DataSourceUtils.getConnection(dataSource);
-		c.setAutoCommit(false);
+		PlatformTransactionManager transactionManager = 
+				new DataSourceTransactionManager(dataSource);
+		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
 		try {
 			List<User> users = userDao.getAll();
 			for(User user: users) {
@@ -52,15 +57,11 @@ public class UserService {
 				}
 			}
 		}catch (Exception e) {
-			c.rollback();
+			transactionManager.commit(status);
 			throw e;
-			// TODO: handle exception
 		}finally {
 			//DB 커넥션을 안전하게 닫느다.
-			DataSourceUtils.releaseConnection(c, dataSource);
-			//동기화작업 종료 및 정리 
-			TransactionSynchronizationManager.unbindResource(this.dataSource);
-			TransactionSynchronizationManager.clearSynchronization();
+			transactionManager.rollback(status);
 		}
 	}
 
