@@ -11,11 +11,11 @@ public interface UserDao {
 
 	List<User> getAll();
 
-	void add(User user) throws SQLException;
+	void add(User user);
 
-	User get(String id) throws SQLException, ClassNotFoundException;
+	User get(String id);
 
-	void deleteAll() throws SQLException;
+	void deleteAll();
 	
 	int getCount() throws SQLException, ClassNotFoundException;
 

@@ -47,7 +47,7 @@ public class UserDaoJdbc implements UserDao {
 		
 			
 	@Override
-	public void add(User user) throws  SQLException {
+	public void add(User user){
 		
 		/*
 		 * this.jdbcTemplate.workWithStatementStrategy(new StatementStrategy() {
@@ -66,7 +66,7 @@ public class UserDaoJdbc implements UserDao {
 	}
 
 	@Override
-	public User get(String id) throws SQLException, ClassNotFoundException {
+	public User get(String id) {
 		return this.jdbcTemplate.queryForObject("SELECT * FROM USERTB WHERE ID = ? ", new Object[] {id}, this.userMapper);
 	}
 
@@ -87,7 +87,7 @@ public class UserDaoJdbc implements UserDao {
 	 * ----------------------------------------------------------------------------------
 	 */
 	@Override
-	public void deleteAll() throws SQLException {
+	public void deleteAll(){
 		/* this.jdbcTemplate.executeSql("DELETE FROM USERTB"); */
 		//방법 1
 		/*

@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.study.springStudy_1.TestUserService.TestUserServiceServiceException;
 import com.study.springStudy_1.User.Level;;
@@ -40,7 +41,8 @@ public class UserServiceTest {
 	UserLevelUpgradePolicy userLeveUpgradePlicy;
 	
 	@Autowired
-	DataSource dataSource;
+	PlatformTransactionManager platformTransactionManager;
+	
 	
 	
 	@Before
@@ -85,7 +87,7 @@ public class UserServiceTest {
 		assertThat(userUpdate.getLevel(), is(expectedLevel));
 	}
 	
-	private void checkLevelUpgraded(User user, boolean upgraded) throws ClassNotFoundException, SQLException {
+	private void checkLevelUpgraded(User user, boolean upgraded) {
 		User userUpdate = userDao.get(user.getId());
 		
 		if(upgraded) {
@@ -120,15 +122,14 @@ public class UserServiceTest {
 	
 
 	@Test
-	public void UpgradeAllorNothing() throws SQLException, ClassNotFoundException {
+	public void UpgradeAllorNothing() {
 		UserService testUserService = new TestUserService(users.get(3).getId());
 		testUserService.setUserDao(this.userDao);
 		
 		//강제 예외를 발생시키기 위해서 TEST에서 직접적으로 객체를 생성한경우 nULL 문제가 발생하였다 해당 문제를 해결하기 위해서 
 		//직접 해당 객체를 주입해주었다.
 		testUserService.setUserLevelUpgradePolicy(this.userLeveUpgradePlicy);
-		System.out.println(this.dataSource);
-		testUserService.setDataSource(this.dataSource);
+		testUserService.setTransactionManager(this.platformTransactionManager);
 		userDao.deleteAll();
 		for(User user: users) userDao.add(user);
 		
