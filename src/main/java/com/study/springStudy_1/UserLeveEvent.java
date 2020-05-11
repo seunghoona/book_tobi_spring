@@ -28,6 +28,7 @@ public class UserLeveEvent implements UserLevelUpgradePolicy {
 	public void upgradeLevel(User user) {
 		user.upgradeLevel();
 		userDao.update(user);
+		
 	}
 
 }

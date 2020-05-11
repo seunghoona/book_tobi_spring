@@ -10,6 +10,7 @@ public class User {
 	Level level;
 	int Login;
 	int Recommend;
+	String email;
 	
 	// 가장 최근에 레벨을 변경한 일자를 User오브젝트에 남기기 
 	Date lastUpgraded;
@@ -106,8 +107,14 @@ public class User {
 	public void setRecommend(int recommend) {
 		Recommend = recommend;
 	}
+	public String getEmail() {
+		return email;
+	}
 
-	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public void upgradeLevel() {
 		Level nextLevel = this.level.nextLevel();
 		if(nextLevel == null) {

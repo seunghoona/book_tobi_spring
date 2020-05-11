@@ -9,6 +9,9 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -31,6 +34,13 @@ public class UserService {
 	@Autowired
 	PlatformTransactionManager transactionManager;
 	
+	@Autowired
+	private MailSender mailSender;
+	
+	public void setMailSender(MailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+	
 	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
@@ -44,6 +54,24 @@ public class UserService {
 		this.userLevelUpgradePolicy = userLevelUpgradePolicy;
 	}
 	
+
+	private void sendUpgradeEmail(User user) {
+		SimpleMailMessage mailMessage  = new SimpleMailMessage();
+		try {
+			mailMessage.setTo(user.getEmail());	
+			mailMessage.setFrom("userAdmin@ksug.org");
+			mailMessage.setSubject("업그레이드 안내 ");
+			mailMessage.setText("사용자님의 등급이 " + user.getLevel().name());
+			
+			this.mailSender.send(mailMessage);
+		}catch (Exception e) {
+			new RuntimeException();
+		}
+		
+	}
+
+	
+	
 	public void upgradeLevels(){
 		TransactionStatus status =  this.transactionManager.getTransaction(new DefaultTransactionDefinition());
 		try {
@@ -51,7 +79,7 @@ public class UserService {
 			for(User user: users) {
 				//
 				if(userLevelUpgradePolicy.canUpgradeLevel(user)) {
-					upgradeLevel(user);
+					this.upgradeLevel(user);
 				}
 			}
 			this.transactionManager.commit(status);
@@ -67,6 +95,7 @@ public class UserService {
 
 	protected void upgradeLevel(User user) {
 		userLevelUpgradePolicy.upgradeLevel(user);
+		sendUpgradeEmail(user);
 	}
 
 	public void add(User user) throws SQLException {
