@@ -5,8 +5,10 @@ import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +17,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -27,6 +32,28 @@ import com.study.springStudy_1.User.Level;;
 @ContextConfiguration(classes = DaoFactory.class)
 public class UserServiceTest {
 	
+	
+	
+	static class MockMailSender implements MailSender {
+		List<String> request = new ArrayList<String>();
+		
+		
+		public List<String> getRequest() {
+			return request;
+		}
+
+		@Override
+		public void send(SimpleMailMessage simpleMessage) throws MailException {
+			request.add(simpleMessage.getTo()[0]);
+		}
+
+		@Override
+		public void send(SimpleMailMessage... simpleMessages) throws MailException {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	@Autowired
 	UserService userService;
 
@@ -49,16 +76,16 @@ public class UserServiceTest {
 	@Before
 	public void setUp() {
 		users = Arrays.asList(
-					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER-1  ,49),
-					new User("coytouch","강명성","2" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER    ,50),
-					new User("drwins","신승환"  ,"3" ,User.Level.SILVER    ,MIN_LOGCOUNT_FOR_SILVER+10 ,60),
-					new User("eadnite1","이상호","4" ,User.Level.SILVER    ,60                         ,MIN_RECOMMEND_FOR_GOLD-1),
-					new User("freen","오민규"   ,"5" ,User.Level.GOLD      ,100                        ,MIN_RECOMMEND_FOR_GOLD)
+					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER-1  ,49,"na"),
+					new User("coytouch","강명성","2" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER    ,50,"b"),
+					new User("drwins","신승환"  ,"3" ,User.Level.SILVER    ,MIN_LOGCOUNT_FOR_SILVER+10 ,60,"x"),
+					new User("eadnite1","이상호","4" ,User.Level.SILVER    ,60                         ,MIN_RECOMMEND_FOR_GOLD-1,"d"),
+					new User("freen","오민규"   ,"5" ,User.Level.GOLD      ,100                        ,MIN_RECOMMEND_FOR_GOLD,"e")
 				);
 	}
 	
 	@Test
-	@Ignore
+	@DirtiesContext
 	public void upgradeLevels() throws SQLException, ClassNotFoundException {
 		
 		userDao.deleteAll();
@@ -66,9 +93,13 @@ public class UserServiceTest {
 		for(User user: users) {
 			userDao.add(user);
 		} 
-		userService.upgradeLevels();
-		List<User> users2 =userDao.getAll();
 		
+		MockMailSender mockMailSender = new MockMailSender();
+		userService.setMailSender(mockMailSender);
+		
+		userService.upgradeLevels();
+
+		List<User> users2 =userDao.getAll();
 		for(User user : users2) {
 			System.out.println(user);
 		}
@@ -79,6 +110,14 @@ public class UserServiceTest {
 		checkLevelUpgraded(users2.get(2), false);
 		checkLevelUpgraded(users2.get(3), true);
 		checkLevelUpgraded(users2.get(4), false);
+		
+		
+		List<String> request = mockMailSender.getRequest();
+		assertThat(request.size(), is(3));
+		assertThat(request.get(0), is(users2.get(0).getEmail()));
+		assertThat(request.get(1), is(users2.get(1).getEmail()));
+		
+		
 		
 	}
 	
@@ -123,6 +162,7 @@ public class UserServiceTest {
 	
 
 	@Test
+	@Ignore
 	public void UpgradeAllorNothing() {
 		UserService testUserService = new UserService();		
 		testUserService.setUserDao(this.userDao);

@@ -55,14 +55,15 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public User(String id, String name, String password, Level level, int login, int recommend) {
+	public User(String id, String name, String password, Level level, int login, int recommend,String email) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.level = level;
-		Login = login;
-		Recommend = recommend;
+		this.Login = login;
+		this.Recommend = recommend;
+		this.email = email;
 	}
 
 	public String getId() {
