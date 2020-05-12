@@ -1,9 +1,11 @@
-package com.study.springStudy_1;
+package com.study.springStudy_1.Dao;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
+
+import com.study.springStudy_1.domain.User;
 
 public interface UserDao {
 

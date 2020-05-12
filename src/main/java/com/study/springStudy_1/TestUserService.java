@@ -1,5 +1,7 @@
 package com.study.springStudy_1;
 
+import com.study.springStudy_1.domain.User;
+
 public class TestUserService extends UserService {
 
 	private String id ;

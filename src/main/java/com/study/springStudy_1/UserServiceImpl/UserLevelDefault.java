@@ -1,23 +1,13 @@
-package com.study.springStudy_1;
+package com.study.springStudy_1.UserServiceImpl;
 
 import static com.study.springStudy_1.UserService.MIN_LOGCOUNT_FOR_SILVER;
 import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;
 
-import java.util.Properties;
-
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Component;
-import org.springframework.web.util.HttpSessionMutexListener;
 
-import oracle.net.ns.SessionAtts;;
+import com.study.springStudy_1.UserLevelUpgradePolicy;
+import com.study.springStudy_1.Dao.UserDao;
+import com.study.springStudy_1.domain.User;;
 
 public class UserLevelDefault implements UserLevelUpgradePolicy {
 

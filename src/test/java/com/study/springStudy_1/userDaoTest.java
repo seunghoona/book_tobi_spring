@@ -17,6 +17,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.study.springStudy_1.Dao.UserDao;
+import com.study.springStudy_1.domain.User;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 /* @ContextConfiguration(classes = DaoFactory.class) */
@@ -33,9 +36,9 @@ public class userDaoTest {
 	
 	@Before
 	public void setUp() {
-		 user1 = new User("test1","김승후","1",User.Level.BASIC,1,0);
-		 user2 = new User("test2","이승후","2",User.Level.SILVER,55,10);
-		 user3 = new User("test3","박승후","3",User.Level.GOLD,100,40);
+		 user1 = new User("test1","김승후","1",User.Level.BASIC ,1   , 0  ,"a");
+		 user2 = new User("test2","이승후","2",User.Level.SILVER,55  ,10  ,"b");
+		 user3 = new User("test3","박승후","3",User.Level.GOLD  ,100 ,40  ,"c");
 	}
 	
 	@Test

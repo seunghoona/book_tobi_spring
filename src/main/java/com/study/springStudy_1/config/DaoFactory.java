@@ -1,4 +1,4 @@
-package com.study.springStudy_1;
+package com.study.springStudy_1.config;
 
 import javax.sql.DataSource;
 
@@ -11,7 +11,13 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.study.springStudy_1.UserLevelUpgradePolicy;
+import com.study.springStudy_1.UserService;
+import com.study.springStudy_1.Dao.UserDao;
+import com.study.springStudy_1.Dao.UserDaoJdbc;
 import com.study.springStudy_1.Mail.DummyMailSender;
+import com.study.springStudy_1.UserServiceImpl.UserLevelDefault;
+import com.study.springStudy_1.domain.User;
 
 @Configuration
 public class DaoFactory {

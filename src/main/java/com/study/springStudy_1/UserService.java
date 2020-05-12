@@ -17,7 +17,9 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import com.study.springStudy_1.User.Level;
+import com.study.springStudy_1.Dao.UserDao;
+import com.study.springStudy_1.domain.User;
+import com.study.springStudy_1.domain.User.Level;
 
 public class UserService {
 

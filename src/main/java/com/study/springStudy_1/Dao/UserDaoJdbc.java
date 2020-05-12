@@ -1,4 +1,4 @@
-package com.study.springStudy_1;
+package com.study.springStudy_1.Dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +9,8 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.study.springStudy_1.User.Level;
+import com.study.springStudy_1.domain.User;
+import com.study.springStudy_1.domain.User.Level;
 
 public class UserDaoJdbc implements UserDao {
 
@@ -36,6 +37,7 @@ public class UserDaoJdbc implements UserDao {
 					user.setLogin(rs.getInt("LOGIN"));
 					user.setRecommend(rs.getInt("RECOMMEND"));
 					return user;
+					
 				}
 			};
 	

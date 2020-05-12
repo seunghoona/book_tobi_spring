@@ -1,8 +1,12 @@
-package com.study.springStudy_1;
+package com.study.springStudy_1.UserServiceImpl;
 
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.study.springStudy_1.UserLevelUpgradePolicy;
+import com.study.springStudy_1.Dao.UserDao;
+import com.study.springStudy_1.domain.User;
 
 public class UserLeveEvent implements UserLevelUpgradePolicy {
 	

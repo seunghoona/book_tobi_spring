@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.study.springStudy_1.User.Level;
+import com.study.springStudy_1.config.DaoFactory;
+import com.study.springStudy_1.domain.User;
+import com.study.springStudy_1.domain.User.Level;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactory.class)
 public class UserTest {

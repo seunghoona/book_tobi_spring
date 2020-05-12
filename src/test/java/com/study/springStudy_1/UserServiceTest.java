@@ -25,8 +25,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.study.springStudy_1.Dao.UserDao;
 import com.study.springStudy_1.TestUserService.TestUserServiceServiceException;
-import com.study.springStudy_1.User.Level;;
+import com.study.springStudy_1.config.DaoFactory;
+import com.study.springStudy_1.domain.User;
+import com.study.springStudy_1.domain.User.Level;;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactory.class)
@@ -76,9 +79,9 @@ public class UserServiceTest {
 	@Before
 	public void setUp() {
 		users = Arrays.asList(
-					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER-1  ,49,"na"),
+					new User("bumjin","박범진"  ,"1" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER-1  ,49,"a"),
 					new User("coytouch","강명성","2" ,User.Level.BASIC     ,MIN_LOGCOUNT_FOR_SILVER    ,50,"b"),
-					new User("drwins","신승환"  ,"3" ,User.Level.SILVER    ,MIN_LOGCOUNT_FOR_SILVER+10 ,60,"x"),
+					new User("drwins","신승환"  ,"3" ,User.Level.SILVER    ,MIN_LOGCOUNT_FOR_SILVER+10 ,60,"c"),
 					new User("eadnite1","이상호","4" ,User.Level.SILVER    ,60                         ,MIN_RECOMMEND_FOR_GOLD-1,"d"),
 					new User("freen","오민규"   ,"5" ,User.Level.GOLD      ,100                        ,MIN_RECOMMEND_FOR_GOLD,"e")
 				);

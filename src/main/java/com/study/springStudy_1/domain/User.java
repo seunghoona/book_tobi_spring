@@ -1,6 +1,7 @@
-package com.study.springStudy_1;
+package com.study.springStudy_1.domain;
 
 import java.util.Date;
+
 
 public class User {
 	
@@ -16,7 +17,7 @@ public class User {
 	Date lastUpgraded;
 	
 	
-	enum Level{
+	public enum Level{
 		
 		 GOLD  (3,null)
 		,SILVER(2,GOLD)
