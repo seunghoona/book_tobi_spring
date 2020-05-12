@@ -165,9 +165,8 @@ public class UserServiceTest {
 	
 
 	@Test
-	@Ignore
 	public void UpgradeAllorNothing() {
-		UserService testUserService = new UserService();		
+		TestUserService testUserService = new TestUserService(users.get(3).getId());		
 		testUserService.setUserDao(this.userDao);
 		
 		//강제 예외를 발생시키기 위해서 TEST에서 직접적으로 객체를 생성한경우 nULL 문제가 발생하였다 해당 문제를 해결하기 위해서 
@@ -182,8 +181,8 @@ public class UserServiceTest {
 			testUserService.upgradeLevels();
 			
 			fail("TestUserServiceExcpetion expected");
-			
-		}catch(TestUserServiceServiceException e) {e.printStackTrace();}
+			//실젝 오류가 발생하여 3번째 데이터는 오류가 나서 처리되지 않으 
+		}catch(TestUserServiceServiceException e) {}
 		//현재 이전 업그레이드가 이루어졌는지 체크 
 		checkLevelUpgraded(users.get(1), false);
 	}
