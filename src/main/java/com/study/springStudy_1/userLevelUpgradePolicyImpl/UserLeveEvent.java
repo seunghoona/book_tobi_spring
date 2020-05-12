@@ -1,19 +1,20 @@
-package com.study.springStudy_1.UserServiceImpl;
+package com.study.springStudy_1.userLevelUpgradePolicyImpl;
 
-import static com.study.springStudy_1.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.study.springStudy_1.UserLevelUpgradePolicy;
 import com.study.springStudy_1.Dao.UserDao;
-import com.study.springStudy_1.domain.User;;
+import com.study.springStudy_1.domain.User;
 
-public class UserLevelDefault implements UserLevelUpgradePolicy {
-
-	@Autowired
-	UserDao userDao;
+public class UserLeveEvent implements UserLevelUpgradePolicy {
 	
+	@Autowired
+	UserDao userDao; 
+	
+	private final int MIN_LOGCOUNT_FOR_SILVER = 100;
+	private final int MIN_RECOMMEND_FOR_GOLD = 100;
 	
 	@Override
 	//업그레이드가 가능한가? 
@@ -31,6 +32,7 @@ public class UserLevelDefault implements UserLevelUpgradePolicy {
 	public void upgradeLevel(User user) {
 		user.upgradeLevel();
 		userDao.update(user);
+		
 	}
 
 }

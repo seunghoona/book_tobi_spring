@@ -1,11 +1,10 @@
 package com.study.springStudy_1;
 
-import static com.study.springStudy_1.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static com.study.springStudy_1.UserService.MIN_RECOMMEND_FOR_GOLD;
+import static com.study.springStudy_1.userService.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
+import static com.study.springStudy_1.userService.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,11 +24,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.study.springStudy_1.Dao.UserDao;
 import com.study.springStudy_1.TestUserService.TestUserServiceServiceException;
+import com.study.springStudy_1.Dao.UserDao;
 import com.study.springStudy_1.config.DaoFactory;
 import com.study.springStudy_1.domain.User;
-import com.study.springStudy_1.domain.User.Level;;
+import com.study.springStudy_1.domain.User.Level;
+import com.study.springStudy_1.userService.UserServiceImpl;
+import com.study.springStudy_1.userService.UserServiceTx;;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactory.class)
@@ -63,13 +64,16 @@ public class UserServiceTest {
 	List<User> users = null;
 	
 	@Autowired
+	UserServiceImpl userServiceImpl;
+	
+	@Autowired
 	UserDao userDao;
 	
 	@Autowired
 	UserLevelUpgradePolicy userLeveUpgradePlicy;
 	
 	@Autowired
-	PlatformTransactionManager platformTransactionManager;
+	PlatformTransactionManager transactionManager;
 	
 	@Autowired
 	MailSender mailSender;
@@ -98,7 +102,7 @@ public class UserServiceTest {
 		} 
 		
 		MockMailSender mockMailSender = new MockMailSender();
-		userService.setMailSender(mockMailSender);
+		userServiceImpl.setMailSender(mockMailSender);
 		
 		userService.upgradeLevels();
 
@@ -168,12 +172,15 @@ public class UserServiceTest {
 	public void UpgradeAllorNothing() {
 		TestUserService testUserService = new TestUserService(users.get(3).getId());		
 		testUserService.setUserDao(this.userDao);
+		testUserService.setMailSender(mailSender);
+		testUserService.setUserLevelUpgradePolicy(this.userLeveUpgradePlicy);
+		
 		
 		//강제 예외를 발생시키기 위해서 TEST에서 직접적으로 객체를 생성한경우 nULL 문제가 발생하였다 해당 문제를 해결하기 위해서 
 		//직접 해당 객체를 주입해주었다.
-		testUserService.setUserLevelUpgradePolicy(this.userLeveUpgradePlicy);
-		testUserService.setTransactionManager(this.platformTransactionManager);
-		testUserService.setMailSender(mailSender);
+		UserServiceTx userServiceTx = new UserServiceTx();
+		userServiceTx.setTransacitionManager(this.transactionManager);
+		userServiceTx.setUserService(testUserService);
 		userDao.deleteAll();
 		for(User user: users) userDao.add(user);
 		

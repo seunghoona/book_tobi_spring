@@ -2,13 +2,11 @@ package com.study.springStudy_1.config;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.MailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.study.springStudy_1.UserLevelUpgradePolicy;
@@ -16,8 +14,10 @@ import com.study.springStudy_1.UserService;
 import com.study.springStudy_1.Dao.UserDao;
 import com.study.springStudy_1.Dao.UserDaoJdbc;
 import com.study.springStudy_1.Mail.DummyMailSender;
-import com.study.springStudy_1.UserServiceImpl.UserLevelDefault;
 import com.study.springStudy_1.domain.User;
+import com.study.springStudy_1.userLevelUpgradePolicyImpl.UserLevelDefault;
+import com.study.springStudy_1.userService.UserServiceImpl;
+import com.study.springStudy_1.userService.UserServiceTx;
 
 @Configuration
 public class DaoFactory {
@@ -45,11 +45,20 @@ public class DaoFactory {
 		return new DataSourceTransactionManager(dataSource());
 	}
 	
+	
+	//
+	@Bean 
+	public UserService userService() {
+		UserServiceTx userServiceTx = new UserServiceTx();
+		userServiceTx.setTransacitionManager(transactionManager());
+		userServiceTx.setUserService(userServiceImpl());
+		return userServiceTx;
+	}
+	
 	@Bean
-	public UserService UserService() {
-		UserService userService = new UserService();
-		userService.setUserDao(userDao());
-		userService.setTransactionManager(transactionManager());
+	public UserService userServiceImpl() {
+		UserServiceImpl userService = new UserServiceImpl();
+		userService.setUserDao(userDao()); 
 		userService.setMailSender(mailSender());
 		return userService;
 	}
