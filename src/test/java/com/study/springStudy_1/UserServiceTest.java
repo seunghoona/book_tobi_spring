@@ -31,6 +31,7 @@ import com.study.springStudy_1.Dao.UserDao;
 import com.study.springStudy_1.config.DaoFactory;
 import com.study.springStudy_1.domain.User;
 import com.study.springStudy_1.domain.User.Level;
+import com.study.springStudy_1.userLevelUpgradePolicyImpl.UserLevelDefault;
 import com.study.springStudy_1.userService.UserServiceImpl;
 import com.study.springStudy_1.userService.UserServiceTx;;
 
@@ -86,6 +87,8 @@ public class UserServiceTest {
 		@Override public void setDataSource(DataSource dataSource) { throw new UnsupportedOperationException(); }
 //		
 	}
+	
+	
 	@Autowired
 	UserService userService;
 
@@ -123,21 +126,24 @@ public class UserServiceTest {
 	public void upgradeLevels() throws SQLException, ClassNotFoundException {
 		
 		UserServiceImpl userServiceImpl = new UserServiceImpl();
-		
 		MockUserDao mockUserDao = new MockUserDao(this.users);
+
+		UserLevelDefault userLevelUpgradePolicy = new UserLevelDefault();
+		userLevelUpgradePolicy.setUserDao(mockUserDao);
+
 		userServiceImpl.setUserDao(mockUserDao);
-		
-		
-		userService.upgradeLevels();
+		userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
+
+		userServiceImpl.upgradeLevels();
 
 		List<User> updated = mockUserDao.getAll();
 		
 		assertThat(updated.size(), is(5));
 		
-/*		
-		checkUserAndLevel(updated.get(0),"bumjin"  ,Level.SILVER);
-		checkUserAndLevel(updated.get(1),"coytouch",Level.SILVER);
-		*/
+		
+		checkUserAndLevel(updated.get(0),"bumjin"   ,Level.BASIC);
+		checkUserAndLevel(updated.get(1),"coytouch" ,Level.SILVER);
+		
 		
 		
 		List<User> request = mockUserDao.getAll();
@@ -149,6 +155,12 @@ public class UserServiceTest {
 		
 	}
 	
+	private void checkUserAndLevel(User user, String expectedId, Level expectedLevel) {
+
+		assertThat(user.getId()   , is(expectedId));
+		assertThat(user.getLevel(), is(expectedLevel));
+	}
+
 	//기존방식에서 아래방식으로 변경 
 	private void checkLevel(User user, Level expectedLevel) throws ClassNotFoundException, SQLException {
 		User userUpdate = userDao.get(user.getId());
