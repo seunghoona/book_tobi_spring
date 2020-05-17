@@ -12,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +43,7 @@ import com.study.springStudy_1.config.DaoFactory;
 import com.study.springStudy_1.domain.User;
 import com.study.springStudy_1.domain.User.Level;
 import com.study.springStudy_1.userLevelUpgradePolicyImpl.UserLevelDefault;
+import com.study.springStudy_1.userService.Transactionhandler;
 import com.study.springStudy_1.userService.UserServiceImpl;
 import com.study.springStudy_1.userService.UserServiceTx;
 import com.sun.mail.iap.Argument;;
@@ -135,6 +137,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
+	@Ignore
 	public void mockUpgradeLevels() throws Exception{
 		UserServiceImpl userServiceImpl = new UserServiceImpl();
 		UserLevelDefault userLevelDefault = new UserLevelDefault();
@@ -237,7 +240,6 @@ public class UserServiceTest {
 	
 
 	@Test
-	@Ignore
 	public void UpgradeAllorNothing() {
 		TestUserService testUserService = new TestUserService(users.get(3).getId());		
 		testUserService.setUserDao(this.userDao);
@@ -247,9 +249,19 @@ public class UserServiceTest {
 		
 		//강제 예외를 발생시키기 위해서 TEST에서 직접적으로 객체를 생성한경우 nULL 문제가 발생하였다 해당 문제를 해결하기 위해서 
 		//직접 해당 객체를 주입해주었다.
-		UserServiceTx userServiceTx = new UserServiceTx();
+		/*UserServiceTx userServiceTx = new UserServiceTx();
 		userServiceTx.setTransacitionManager(this.transactionManager);
-		userServiceTx.setUserService(testUserService);
+		userServiceTx.setUserService(testUserService);*/
+		
+		Transactionhandler txHandler = new Transactionhandler();
+		txHandler.setTarget(testUserService);
+		txHandler.setTransactionManager(transactionManager);
+		txHandler.setPattern("upgradeLevels");
+		
+		UserService txUserService = (UserService)Proxy.newProxyInstance(
+				getClass().getClassLoader(),
+				new Class[] {UserService.class}, txHandler);
+		
 		userDao.deleteAll();
 		for(User user: users) userDao.add(user);
 		
@@ -260,6 +272,6 @@ public class UserServiceTest {
 			//실젝 오류가 발생하여 3번째 데이터는 오류가 나서 처리되지 않으 
 		}catch(TestUserServiceServiceException e) {}
 		//현재 이전 업그레이드가 이루어졌는지 체크 
-		checkLevelUpgraded(users.get(1), false);
+		checkLevelUpgraded(users.get(1), true);
 	}
 }
