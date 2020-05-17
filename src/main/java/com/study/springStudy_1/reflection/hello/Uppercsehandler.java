@@ -5,9 +5,9 @@ import java.lang.reflect.Method;
 
 public class Uppercsehandler implements InvocationHandler {
 
-	Hello target;
+	Object target;
 	
-	public Uppercsehandler(Hello target) {
+	public Uppercsehandler(Object target) {
 		super();
 		this.target = target;
 	}
@@ -16,8 +16,12 @@ public class Uppercsehandler implements InvocationHandler {
 
 	@Override
 	public Object invoke(Object object, Method method, Object[] args) throws Throwable {
-		String ret = (String)method.invoke(target,args);
-		return ret.toUpperCase();
+		Object ret = method.invoke(target,args);
+		if(ret instanceof String) {
+			return ((String)ret).toUpperCase();
+		}
+		
+		return ret;
 	}
 
 }
