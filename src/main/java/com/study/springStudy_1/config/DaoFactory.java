@@ -18,6 +18,7 @@ import com.study.springStudy_1.domain.User;
 import com.study.springStudy_1.userLevelUpgradePolicyImpl.UserLevelDefault;
 import com.study.springStudy_1.userService.UserServiceImpl;
 import com.study.springStudy_1.userService.UserServiceTx;
+import com.study.springStudy_1.userService.beanFactory.MessageFactoryBean;
 
 @Configuration
 public class DaoFactory {
@@ -80,6 +81,14 @@ public class DaoFactory {
 		/*mailSender.host();*/
 		return mailSender;
 	}
+	
+	@Bean
+	public MessageFactoryBean messageFactoryBean(){
+		MessageFactoryBean messageFactoryBean = new MessageFactoryBean();
+		messageFactoryBean.setText("FACTORY BEAN");
+		return messageFactoryBean;
+	}
+	
 	
 	/*
 	 * @Bean public ConnectionMaker connectionMaker() { //DI 주입 //운영 개발 로컬 접속정보를 쉽게
