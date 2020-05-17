@@ -3,12 +3,20 @@ package com.study.springStudy_1;
 import static com.study.springStudy_1.userService.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
 import static com.study.springStudy_1.userService.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -17,11 +25,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -33,7 +43,8 @@ import com.study.springStudy_1.domain.User;
 import com.study.springStudy_1.domain.User.Level;
 import com.study.springStudy_1.userLevelUpgradePolicyImpl.UserLevelDefault;
 import com.study.springStudy_1.userService.UserServiceImpl;
-import com.study.springStudy_1.userService.UserServiceTx;;
+import com.study.springStudy_1.userService.UserServiceTx;
+import com.sun.mail.iap.Argument;;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DaoFactory.class)
@@ -65,7 +76,7 @@ public class UserServiceTest {
 
 		private List<User> users;
 		private List<User> updated = new ArrayList();
-		
+	
 		public MockUserDao(List<User> users) {
 			this.users = users;
 		}
@@ -120,20 +131,46 @@ public class UserServiceTest {
 					new User("eadnite1","이상호","4" ,User.Level.SILVER    ,60                         ,MIN_RECOMMEND_FOR_GOLD-1,"d"),
 					new User("freen","오민규"   ,"5" ,User.Level.GOLD      ,100                        ,MIN_RECOMMEND_FOR_GOLD,"e")
 				);
+		
 	}
 	
 	@Test
+	public void mockUpgradeLevels() throws Exception{
+		UserServiceImpl userServiceImpl = new UserServiceImpl();
+		UserLevelDefault userLevelDefault = new UserLevelDefault();
+		
+		//목업생성
+		UserDao mockUserDao = Mockito.mock(UserDao.class);
+
+		when(mockUserDao.getAll()).thenReturn(this.users);
+
+		userServiceImpl.setUserDao(mockUserDao);
+		userServiceImpl.setUserLevelUpgradePolicy(userLevelDefault);
+		userLevelDefault.setUserDao(mockUserDao);
+		
+		
+		userServiceImpl.upgradeLevels();
+		verify(mockUserDao,times(3)).update(any(User.class));
+		verify(mockUserDao).update(users.get(1));
+		assertThat(users.get(1).getLevel(),is(Level.SILVER) );
+		verify(mockUserDao).update(users.get(3));
+		assertThat(users.get(3).getLevel(),is(Level.GOLD) );
+		
+		
+	}
+	
+	
+	@Test
+	@Ignore
 	public void upgradeLevels() throws SQLException, ClassNotFoundException {
 		
 		UserServiceImpl userServiceImpl = new UserServiceImpl();
 		MockUserDao mockUserDao = new MockUserDao(this.users);
 
 		UserLevelDefault userLevelUpgradePolicy = new UserLevelDefault();
-		userLevelUpgradePolicy.setUserDao(mockUserDao);
 
 		userServiceImpl.setUserDao(mockUserDao);
 		userServiceImpl.setUserLevelUpgradePolicy(userLevelUpgradePolicy);
-
 		userServiceImpl.upgradeLevels();
 
 		List<User> updated = mockUserDao.getAll();
@@ -150,8 +187,6 @@ public class UserServiceTest {
 		assertThat(request.size(), is(5));
 		assertThat(request.get(0).getEmail(), is(users.get(0).getEmail()));
 		assertThat(request.get(1).getEmail(), is(users.get(1).getEmail()));
-		
-		
 		
 	}
 	
