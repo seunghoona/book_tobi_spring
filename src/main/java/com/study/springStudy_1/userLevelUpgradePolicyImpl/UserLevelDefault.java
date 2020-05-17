@@ -36,7 +36,7 @@ public class UserLevelDefault implements UserLevelUpgradePolicy {
 
 	@Override
 	public void upgradeLevel(User user) {
-		System.out.println(this.getClass().getClass());
+		System.out.println("ASD");
 		user.upgradeLevel();
 		userDao.update(user);
 	}
